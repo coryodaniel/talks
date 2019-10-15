@@ -12,11 +12,11 @@ clean: ## Destroy all resources created by this Makefile
 
 .PHONY: crd
 crd: ## Create the Todo CR
-	kubectl apply -f crd.yaml
+	kubectl apply -f ./manifests/crd.yaml
 
 .PHONY: todos
 todos: ## Create a list of Todos
-	kubectl apply -f todos.yaml
+	kubectl apply -f ./manifests/todos.yaml
 
 .PHONY: list
 list: ## List all Todos
@@ -36,4 +36,4 @@ edit: ## Open the default editor w/ the create-slideshow Todo
 
 .PHONY: invalid
 invalid: ## Try to create invalid Todos
-	kubectl apply -f invalid.yaml
+	kubectl apply -f ./manifests/invalid.yaml
