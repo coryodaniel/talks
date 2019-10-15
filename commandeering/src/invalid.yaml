@@ -1,0 +1,17 @@
+---
+apiVersion: todo-operator.bonny.run/v1alpha1
+kind: Todo
+metadata:
+  name: no-name
+spec:
+  description: I ain't got no name.
+  state: Pending
+---
+apiVersion: todo-operator.bonny.run/v1alpha1
+kind: Todo
+metadata:
+  name: bad-state
+spec:
+  name: Bad state
+  description: State is invalid
+  state: Won't fix
