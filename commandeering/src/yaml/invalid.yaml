@@ -1,5 +1,5 @@
 ---
-apiVersion: todo-operator.bonny.run/v1alpha1
+apiVersion: todo-operator.bonny.run/v1
 kind: Todo
 metadata:
   name: no-name
@@ -7,7 +7,7 @@ spec:
   description: I ain't got no name.
   state: Pending
 ---
-apiVersion: todo-operator.bonny.run/v1alpha1
+apiVersion: todo-operator.bonny.run/v1
 kind: Todo
 metadata:
   name: bad-state

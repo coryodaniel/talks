@@ -1,0 +1,183 @@
+---
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "labels": {
+      "k8s-app": "todo-operator"
+    },
+    "name": "todo-operator",
+    "namespace": "default"
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "k8s-app": "todo-operator"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "k8s-app": "todo-operator"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "env": [
+              {
+                "name": "MIX_ENV",
+                "value": "prod"
+              },
+              {
+                "name": "BONNY_POD_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.name"
+                  }
+                }
+              },
+              {
+                "name": "BONNY_POD_NAMESPACE",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.namespace"
+                  }
+                }
+              },
+              {
+                "name": "BONNY_POD_IP",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "status.podIP"
+                  }
+                }
+              },
+              {
+                "name": "BONNY_POD_SERVICE_ACCOUNT",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.serviceAccountName"
+                  }
+                }
+              }
+            ],
+            "image": "quay.io/coryodaniel/todo-operator",
+            "name": "todo-operator",
+            "resources": {
+              "limits": {
+                "cpu": "200m",
+                "memory": "200Mi"
+              },
+              "requests": {
+                "cpu": "200m",
+                "memory": "200Mi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "readOnlyRootFilesystem": true,
+              "runAsNonRoot": true,
+              "runAsUser": 65534
+            }
+          }
+        ],
+        "serviceAccountName": "todo-operator"
+      }
+    }
+  }
+}
+---
+{
+  "apiVersion": "apiextensions.k8s.io/v1beta1",
+  "kind": "CustomResourceDefinition",
+  "metadata": {
+    "labels": {
+      "k8s-app": "todo-operator"
+    },
+    "name": "todos.todo-operator.bonny.run"
+  },
+  "spec": {
+    "additionalPrinterColumns": [],
+    "group": "todo-operator.bonny.run",
+    "names": {
+      "kind": "Todo",
+      "plural": "todos",
+      "shortNames": null,
+      "singular": "todo"
+    },
+    "scope": "Namespaced",
+    "version": "v1"
+  }
+}
+---
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRole",
+  "metadata": {
+    "labels": {
+      "k8s-app": "todo-operator"
+    },
+    "name": "todo-operator"
+  },
+  "rules": [
+    {
+      "apiGroups": [
+        "apiextensions.k8s.io"
+      ],
+      "resources": [
+        "customresourcedefinitions"
+      ],
+      "verbs": [
+        "*"
+      ]
+    },
+    {
+      "apiGroups": [
+        "todo-operator.bonny.run"
+      ],
+      "resources": [
+        "todos"
+      ],
+      "verbs": [
+        "*"
+      ]
+    }
+  ]
+}
+---
+{
+  "apiVersion": "v1",
+  "kind": "ServiceAccount",
+  "metadata": {
+    "labels": {
+      "k8s-app": "todo-operator"
+    },
+    "name": "todo-operator",
+    "namespace": "default"
+  }
+}
+---
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRoleBinding",
+  "metadata": {
+    "labels": {
+      "k8s-app": "todo-operator"
+    },
+    "name": "todo-operator"
+  },
+  "roleRef": {
+    "apiGroup": "rbac.authorization.k8s.io",
+    "kind": "ClusterRole",
+    "name": "todo-operator"
+  },
+  "subjects": [
+    {
+      "kind": "ServiceAccount",
+      "name": "todo-operator",
+      "namespace": "default"
+    }
+  ]
+}

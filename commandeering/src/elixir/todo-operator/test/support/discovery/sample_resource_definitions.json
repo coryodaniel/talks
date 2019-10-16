@@ -1,0 +1,46 @@
+[
+  {
+    "groupVersion": "v1",
+    "kind": "APIResourceList",
+    "resources": [
+      {
+        "kind": "Namespace",
+        "name": "namespaces"
+      },
+      {
+        "kind": "Node",
+        "name": "nodes",
+        "namespaced": false,
+        "singularName": "node",
+        "verbs": ["get", "list"]
+      },
+      {
+        "categories": ["all"],
+        "kind": "Pod",
+        "name": "pods",
+        "namespaced": true,
+        "shortNames": ["po"],
+        "singularName": "",
+        "verbs": [
+          "create",
+          "delete",
+          "deletecollection",
+          "get",
+          "list",
+          "patch",
+          "update",
+          "watch"
+        ]
+      },
+      {
+        "group": "policy",
+        "kind": "Eviction",
+        "name": "pods/eviction",
+        "namespaced": true,
+        "singularName": "",
+        "verbs": ["create"],
+        "version": "v1beta1"
+      }
+    ]
+  }
+]
