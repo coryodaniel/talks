@@ -32,3 +32,22 @@ spec:
     * [x] Basic operator with elixir
     * [ ] Embarrass self
   state: In progress  
+---
+apiVersion: todo-operator.bonny.run/v1
+kind: Todo
+metadata:
+  name: live-demo
+spec:
+  name: Live Demo
+  description: |-
+    * [ ] BREATHE    
+    * [ ] Deploy a CRD
+    * [ ] Create some todos
+    * [ ] List todos
+    * [ ] Get todo
+    * [ ] Cleanup
+    * [ ] Show bonny controller
+    * [ ] deploy manifest
+    * [ ] stern them logs
+    * [ ] re-apply yaml/todos.yaml
+  state: In progress  
