@@ -20,8 +20,8 @@ spec:
           name: cpu-affinity
           resources:
             limits:
-              cpu: 200m
+              cpu: 2000m
               memory: 100Mi
             requests:
-              cpu: 200m
+              cpu: 2000m
               memory: 100Mi

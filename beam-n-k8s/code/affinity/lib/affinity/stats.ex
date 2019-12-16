@@ -27,13 +27,11 @@ defmodule Affinity.Stats do
   ]
 
   def start_link(_) do
-    IO.puts("Start")
     GenServer.start_link(__MODULE__, %{})
   end
 
   @impl true
   def init(state) do
-    IO.puts("Init")
     schedule_log_stats()
     {:ok, state}
   end
@@ -56,7 +54,7 @@ defmodule Affinity.Stats do
   end
 
   def stats do
-    Enum.reduce(@stats, %{}, fn stat, acc ->
+    Enum.reduce(@stats, schedulers(), fn stat, acc ->
       val = :erlang.statistics(stat)
       Map.put(acc, stat, val)
     end)
