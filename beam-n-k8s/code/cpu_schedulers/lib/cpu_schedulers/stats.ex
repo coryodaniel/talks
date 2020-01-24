@@ -1,4 +1,4 @@
-defmodule Affinity.Stats do
+defmodule CpuSchedulers.Stats do
   @moduledoc "VM Stats"
 
   use GenServer
@@ -54,10 +54,11 @@ defmodule Affinity.Stats do
   end
 
   def stats do
-    Enum.reduce(@stats, schedulers(), fn stat, acc ->
-      val = :erlang.statistics(stat)
-      Map.put(acc, stat, val)
-    end)
+    schedulers()
+    # Enum.reduce(@stats, schedulers(), fn stat, acc ->
+    #   val = :erlang.statistics(stat)
+    #   Map.put(acc, stat, val)
+    # end)
   end
 
   defp schedule_log_stats() do

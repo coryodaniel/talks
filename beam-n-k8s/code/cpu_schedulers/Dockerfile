@@ -25,8 +25,8 @@ FROM alpine:3.10
 RUN apk add --update openssl ncurses
 
 WORKDIR /app
-COPY --from=builder /app/_build/prod/rel/affinity ./
+COPY --from=builder /app/_build/prod/rel/cpu_schedulers ./
 RUN chown -R nobody: /app
 
-ENTRYPOINT ["/app/bin/affinity"]
+ENTRYPOINT ["/app/bin/cpu_schedulers"]
 CMD ["start"]

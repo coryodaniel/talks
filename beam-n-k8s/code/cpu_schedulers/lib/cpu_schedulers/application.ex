@@ -1,4 +1,4 @@
-defmodule Affinity.Application do
+defmodule CpuSchedulers.Application do
   @moduledoc false
 
   use Application
@@ -7,7 +7,7 @@ defmodule Affinity.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {Affinity.Stats, []}
+      {CpuSchedulers.Stats, []}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_all)

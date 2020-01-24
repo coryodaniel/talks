@@ -1,4 +1,4 @@
-defmodule Affinity.TupleEncoder do
+defmodule CpuSchedulers.TupleEncoder do
   alias Jason.Encoder
 
   defimpl Encoder, for: Tuple do

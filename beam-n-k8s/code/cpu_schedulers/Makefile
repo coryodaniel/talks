@@ -1,20 +1,20 @@
-REPO=quay.io/coryodaniel/affinity
+REPO?=quay.io/coryodaniel/cpu-schedulers
 
 .PHONY: docker
 docker: docker-build docker-push
 
 .PHONY: all
-all: docker base log
+all: docker deploy logs
 
-.PHONY: base
-base:
+.PHONY: deploy
+deploy:
 	-kubectl delete -k ./manifests/base
 	kubectl apply -k ./manifests/base
 
-.PHONY: log
-log:
-	stern cpu-affinity
-
+.PHONY: logs
+logs:
+	(which stern && stern cpu-schedulers) || kubectl logs deployment/cpu-schedulers -f
+	
 .PHONY: docker-build
 docker-build:
 	docker build -t ${REPO}:latest -t ${REPO}:$(shell make version) .
@@ -28,4 +28,4 @@ version:
 	@cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/'
 
 local-shell: docker-build
-	docker run -it --entrypoint "/bin/sh" quay.io/coryodaniel/affinity:latest
+	docker run -it --entrypoint "/bin/sh" quay.io/coryodaniel/cpu-schedulers:latest

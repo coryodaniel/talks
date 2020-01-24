@@ -3,25 +3,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: cpu-affinity
-  name: cpu-affinity
+    app: cpu-schedulers
+  name: cpu-schedulers
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cpu-affinity
+      app: cpu-schedulers
   template:
     metadata:
       labels:
-        app: cpu-affinity
+        app: cpu-schedulers
     spec:
       containers:
-        - image: quay.io/coryodaniel/affinity:latest
-          name: cpu-affinity
+        - image: quay.io/coryodaniel/cpu-schedulers:latest
+          name: cpu-schedulers
           resources:
             limits:
-              cpu: 2000m
+              cpu: 2
               memory: 100Mi
             requests:
-              cpu: 2000m
+              cpu: 2
               memory: 100Mi

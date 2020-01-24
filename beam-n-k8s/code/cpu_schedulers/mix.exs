@@ -1,9 +1,9 @@
-defmodule Affinity.MixProject do
+defmodule CpuSchedulers.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :affinity,
+      app: :cpu_schedulers,
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule Affinity.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Affinity.Application, []}
+      mod: {CpuSchedulers.Application, []}
     ]
   end
 
