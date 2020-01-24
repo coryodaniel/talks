@@ -1,6 +1,6 @@
 # CPUs & Schedulers
 
-Erlang starts schedulers for the number of CPUs or vCPUs on the node rather than the number set in `spec.template.spec.containers.resources.limits.cpu` or `spec.template.spec.containers.resources.requests.cpu`.
+Kubernetes resources fields `spec.template.spec.containers.resources.limits.cpu` and `spec.template.spec.containers.resources.requests.cpu` use CFS quotas to control CPU resources. Since Erlang can see the number of CPUs/vCPUs on the node, the number of online schedulers will be the nodes CPU count rather than what is accessible via CFS quota.
 
 ## Setup
 
