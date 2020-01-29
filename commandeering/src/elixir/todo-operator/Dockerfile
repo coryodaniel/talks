@@ -12,7 +12,6 @@ RUN mix local.hex --force && \
   mix local.rebar --force
 
 WORKDIR /app
-
 COPY . .
 
 RUN mix deps.get --only-prod && mix release
@@ -22,7 +21,6 @@ RUN mix deps.get --only-prod && mix release
 #########################
 
 FROM alpine:3.10
-
 RUN apk add --update openssl ncurses
 
 WORKDIR /app
