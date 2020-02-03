@@ -1,1 +1,0 @@
-![YAML AF](logo.png)
