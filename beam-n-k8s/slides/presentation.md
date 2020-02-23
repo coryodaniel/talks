@@ -510,62 +510,37 @@ spec:
 
 ---
 
-# So are they better together, here. Tech part
-
----
-
-# Kubernetes Features
-
-^ I'm not including any operators here.
-
-| Feature                      | Kubernetes                                            |
-| ---------------------------- | :---------------------------------------------------- |
-| Automated Rollouts/Rollbacks | `Deployment`, `ReplicaSet`, `StatefulSet`             |
-| Automated Scheduling         | pod/node affinity/anti-affinity, resources            |
-| Bin Packing                  | `Policy`, `LimitRange`, `resources`                   |
-| Batch Execution              | Batch Jobs and CI Workloads, `Job`, `CronJob`         |
-| Service Discovery / DNS      | `Service`, `Endpoint`, `EndpointSlices`, external-dns |
-| Load Balancing               | internal & external load balancers                    |
-| Storage Orchaestration       | `PersistentVolume`, `StorageClass`, and CSI           |
-| Secret "Management"          | `Secret`                                              |
-| Config Managmenet            | `ConfigMap`                                           |
-| Self-healing                 | Shell, TCP, HTTP Health Checks                        |
-| Horizontal Scaling           | `HorizontalPodAutoscaler`                             |
-| Vertical Scaling             | `VerticalPodAutoscaler`, `resources`                  |
-| QoS                          | `PodDisruptionBudget`, `resources`                    |
-| Security Templates           | `PodSecurityPolicy`, `securityContext`                |
-| Metrics                      | metric-server, metrics api                            |
-| Operators                    | `Deployment`, operator-sdk, bonny                     |
-
----
-
-# [fit] **So...**
-# [fit] BEAM and Kubernetes: 
+# [fit] So...
+# [fit] **BEAM and Kubernetes:**
 # [fit] Better Together?
 
 ^ let's talk about what we are here for.
 
-^ I'm comparing features of kubernetes to beam and erlang/otp. Of course you can build a lot of these features with other tools.
+---
 
-^ One said realization we must face, not everything is erlang, so we must consider the fault-tolerance, reliability, and resiliency of our non-erlang apps
+^ Lightning Round.
 
-| Feature                                   |                      Kubernetes                       |              Beam or Erlang/OTP              |   Can k8s Help?    |
-| ----------------------------------------- | :---------------------------------------------------: | :------------------------------------------: | :----------------: |
-| Automated Rollouts / Rollbacks            |       `Deployment`, `ReplicaSet`, `StatefulSet`       |               Hot Code Loading               |        :x:         |
-| Automated Scheduling (instance placement) |     pod/node affinity/anti-affinity, `resources`      |                      -                       | :white_check_mark: |
-| Bin Packing                               |          `Policy`, `LimitRange`, `resources`          |                      -                       | :white_check_mark: |
-| Batch Jobs / Execution                    |                   `Job`, `CronJob`                    |                  Processes                   | :white_check_mark: |
-| Service Discovery / DNS                   | `Service`, `Endpoint`, `EndpointSlices`, external-dns |              Distributed Erlang              | :white_check_mark: |
-| Load Balancing                            |          internal & external load balancers           |                      -                       | :white_check_mark: |
-| Storage Orchaestration                    |      `PersistentVolume`, `StorageClass`, and CSI      |                DETS / Mnesia                 | :white_check_mark: |
-| Secret "Management"                       |                       `Secret`                        |                      -                       | :white_check_mark: |
-| Config Management                         |                      `ConfigMap`                      |             vm.args, sys.config              | :white_check_mark: |
-| Health Checks                             |            Shell, TCP, HTTP Health Checks             |            Supervisors, `-heart`             | :white_check_mark: |
-| Horizontal Scaling                        |               `HorizontalPodAutoscaler`               |                  Add nodes                   | :white_check_mark: |
-| Vertical Scaling                          |         `VerticalPodAutoscaler`, `resources`          |                Add CPUs / RAM                | :white_check_mark: |
-| QoS                                       |          `PodDisruptionBudget`, `resources`           |             ETS / DETS / Mnesia              | :white_check_mark: |
-| Security Templates                        |        `PodSecurityPolicy`, `securityContext`         |                      -                       | :white_check_mark: |
-| Metrics                                   |         metric-server, custom-metrics-server          | `erlang:system_info/1` `erlang:statistics/1` | :white_check_mark: |
+^ A quick glance at the feature list from earlier and we can see that Kubernetes can add to your applications availability
+
+| Feature                                   | Kubernetes                                            |              Beam or Erlang/OTP              |   Can k8s Help?    |
+| ----------------------------------------- | :---------------------------------------------------- | :------------------------------------------: | :----------------: |
+| Automated Rollouts / Rollbacks            | `Deployment`, `ReplicaSet`, `StatefulSet`             |               Hot Code Loading               |        :x:         |
+| Automated Scheduling (instance placement) | pod/node affinity/anti-affinity, `resources`          |                      -                       | :white_check_mark: |
+| Bin Packing                               | `Policy`, `LimitRange`, `resources`                   |                      -                       | :white_check_mark: |
+| Batch Jobs / Execution                    | `Job`, `CronJob`                                      |                  Processes                   | :white_check_mark: |
+| Service Discovery / DNS                   | `Service`, `Endpoint`, `EndpointSlices`, external-dns |                      -                       | :white_check_mark: |
+| Load Balancing                            | internal & external load balancers                    |                      -                       | :white_check_mark: |
+| Storage Orchaestration                    | `PersistentVolume`, `StorageClass`, and CSI           |                      -                       | :white_check_mark: |
+| Secret "Management"                       | `Secret`                                              |                      -                       | :white_check_mark: |
+| Config Management                         | `ConfigMap`                                           |             vm.args, sys.config              | :white_check_mark: |
+| Health Checks                             | Shell, TCP, HTTP Health Checks                        |            Supervisors, `-heart`             | :white_check_mark: |
+| Horizontal Scaling                        | `HorizontalPodAutoscaler`                             |             Add nodes :thumbsup:             | :white_check_mark: |
+| Vertical Scaling                          | `VerticalPodAutoscaler`, `resources`                  |          Add CPUs / RAM :thumbsup:           | :white_check_mark: |
+| QoS                                       | `PodDisruptionBudget`, `resources`                    |                      -                       | :white_check_mark: |
+| Security Templates                        | `PodSecurityPolicy`, `securityContext`                |                      -                       | :white_check_mark: |
+| Metrics                                   | metric-server, custom-metrics-server                  | `erlang:system_info/1` `erlang:statistics/1` | :white_check_mark: |
+
+<!--
 
 ---
 
@@ -583,6 +558,7 @@ spec:
 | AWS EKS            | 99.9%        | credits |
 | GCP GKE (regional) | 99.95%       | :x:     |
 | GCP GKE (zonal)    | 99.5%        | :x:     |
+-->
 
 ---
 
