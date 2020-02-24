@@ -1,0 +1,26 @@
+<h1>Listing Prime calculators</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Limit</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for prime_calculator <- @prime_calculators do %>
+    <tr>
+      <td><%= prime_calculator.limit %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.prime_calculator_path(@conn, :show, prime_calculator) %></span>
+        <span><%= link "Edit", to: Routes.prime_calculator_path(@conn, :edit, prime_calculator) %></span>
+        <span><%= link "Delete", to: Routes.prime_calculator_path(@conn, :delete, prime_calculator), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Prime calculator", to: Routes.prime_calculator_path(@conn, :new) %></span>

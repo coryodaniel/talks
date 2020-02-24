@@ -1,0 +1,13 @@
+<h1>Show Prime calculator</h1>
+
+<ul>
+
+  <li>
+    <strong>Limit:</strong>
+    <%= @prime_calculator.limit %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.prime_calculator_path(@conn, :edit, @prime_calculator) %></span>
+<span><%= link "Back", to: Routes.prime_calculator_path(@conn, :index) %></span>

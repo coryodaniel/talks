@@ -1,0 +1,9 @@
+<%= form_for @conn, @action, fn f -> %>
+  <%= label f, :limit %>
+  <%= number_input f, :limit %>
+  <%= error_tag f, :limit %>
+
+  <div>
+    <%= submit "Save" %>
+  </div>
+<% end %>

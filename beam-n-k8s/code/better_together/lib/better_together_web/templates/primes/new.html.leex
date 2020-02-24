@@ -1,0 +1,9 @@
+<h2>Start a Prime Calculator</h2>
+
+<%= f = form_for :primes, "#", [phx_submit: :save] %>
+  <%= label f, :limit, "Calculate to n-th Prime" %>
+  <%= text_input f, :limit, value: "1000000", type: "number" %>
+  <%= submit "Start" %>
+</form>
+
+<span><%= live_redirect "Back", to: Routes.live_path(@socket, PrimesLive.Index) %></span>

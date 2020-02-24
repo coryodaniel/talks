@@ -1,41 +1,38 @@
-defmodule BetterTogether.PrimeCalculator do
+defmodule BetterTogether.PrimeCalculator.Impl do
   @moduledoc """
   Calculates prime numbers
 
   Credit [github.com/ybod](https://github.com/ybod/elixir_primes)
   """
 
-  @doc """
-  Returns the list of the prime numbers up to the given limit. Limit must be integer and larger than 1.
-  ## Examples
+  def init_state(limit) when limit == 2 do
+    %{limit: 2, completed: true, primes: [2], working_set: nil}
+  end
 
-     iex> BetterTogether.PrimeCalculator.get_primes_list(10)
-     [2, 3, 5, 7]
-  """
-  @spec get_primes_list(pos_integer) :: [pos_integer]
-  def get_primes_list(limit) when limit == 2, do: [2]
-
-  def get_primes_list(limit) when limit > 2 do
+  def init_state(limit) when limit > 2 do
     odd_integers = :lists.seq(3, limit, 2)
-    set = MapSet.new([2 | odd_integers])
+    working_set = MapSet.new([2 | odd_integers])
 
-    sieve(set, 3, limit)
+    %{limit: limit, completed: false, primes: nil, working_set: working_set}
   end
 
   # Sieving: all primes already found, no need to look furhter
-  defp sieve(set, odd_num, limit) when odd_num * odd_num > limit do
-    set
-    |> MapSet.to_list()
-    |> Enum.sort()
+  def sieve(set, odd_num, limit) when odd_num * odd_num > limit do
+    primes =
+      set
+      |> MapSet.to_list()
+      |> Enum.sort()
+
+    {:completed, primes}
   end
 
   # Check if the next odd number can be found is the Set.
   # If found - it's a prime number and we need to remove all multiples of this prime from Set.
-  defp sieve(set, odd_num, limit) do
+  def sieve(set, odd_num, limit) do
     new_set =
       if MapSet.member?(set, odd_num), do: delete_composites(odd_num, set, limit), else: set
 
-    sieve(new_set, odd_num + 2, limit)
+    {:not_completed, new_set}
   end
 
   defp delete_composites(first, set, limit) do

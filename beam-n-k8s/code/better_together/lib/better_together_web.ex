@@ -20,6 +20,7 @@ defmodule BetterTogetherWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: BetterTogetherWeb
+      import Phoenix.LiveView.Controller
 
       import Plug.Conn
       import BetterTogetherWeb.Gettext
@@ -41,6 +42,8 @@ defmodule BetterTogetherWeb do
 
       import BetterTogetherWeb.ErrorHelpers
       import BetterTogetherWeb.Gettext
+      import Phoenix.LiveView.Helpers
+
       alias BetterTogetherWeb.Router.Helpers, as: Routes
     end
   end
@@ -50,6 +53,7 @@ defmodule BetterTogetherWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
