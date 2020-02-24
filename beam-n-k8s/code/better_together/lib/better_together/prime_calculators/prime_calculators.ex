@@ -4,7 +4,7 @@ defmodule BetterTogether.PrimeCalculators do
   """
 
   use DynamicSupervisor
-  alias BetterTogether.PrimeCalculators.CalcServer
+  alias BetterTogether.PrimeCalculators.PrimesWorker
 
   def start_link(_arg) do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -34,18 +34,13 @@ defmodule BetterTogether.PrimeCalculators do
   end
 
   def create_prime_calculator(limit) when is_integer(limit) do
-    child_spec = {CalcServer, limit}
+    child_spec = {PrimesWorker, limit}
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
 
   def dynamic_child_to_map({_, pid, _, [mod]}) do
-    %{primes: primes} = CalcServer.status(pid)
-
     pid
-    |> mod.status()
-    |> Map.put(:elapsed, CalcServer.elapsed(pid))
-    |> Map.put(:max_prime, List.last(primes))
-    |> Map.put(:num_primes, length(primes))
+    |> mod.results()
     |> Map.put(:id, "#{inspect(pid)}")
   end
 end

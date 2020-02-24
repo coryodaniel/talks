@@ -27,8 +27,8 @@ defmodule BetterTogether.Application do
   end
 
   def start_calcs(defaults) do
-    Enum.each defaults, fn(limit) -> 
+    Enum.each(defaults, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)
-    end
+    end)
   end
 end
