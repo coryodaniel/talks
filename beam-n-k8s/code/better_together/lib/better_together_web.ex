@@ -39,6 +39,7 @@ defmodule BetterTogetherWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
+      import BetterTogetherWeb.FormatHelpers
       import BetterTogetherWeb.ErrorHelpers
       import BetterTogetherWeb.Gettext
 

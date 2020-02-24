@@ -14,7 +14,7 @@ defmodule BetterTogether.Application do
     opts = [strategy: :one_for_one, name: BetterTogether.Supervisor]
     supervisor = Supervisor.start_link(children, opts)
 
-    start_calcs([1000, 5000, 10000, 20000])
+    start_calcs()
 
     supervisor
   end
@@ -26,8 +26,19 @@ defmodule BetterTogether.Application do
     :ok
   end
 
-  def start_calcs(defaults) do
+  def start_calcs() do
+    defaults = [1_000, 10_000, 100_000, 1_000_000, 10_000_000]
+
     Enum.each(defaults, fn limit ->
+      BetterTogether.PrimeCalculators.create_prime_calculator(limit)
+    end)
+
+    # Takes about 2 min on my macbook
+    slow_limit = 100_000_000
+    slow_occurrences = :erlang.system_info(:logical_processors)    
+    slow = List.duplicate(slow_limit, slow_occurrences)
+
+    Enum.each(slow, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)
     end)
   end

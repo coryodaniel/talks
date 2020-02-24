@@ -7,20 +7,35 @@
       <th>Status</th>
       <th>Max Prime</th>      
       <th>Num Primes</th>
-      <th>Elapsed Time (μs)</th>      
+      <th>Elapsed Time (μs)</th>     
+      <th>Elapsed Time (s)</th> 
     </tr>
   </thead>
   <tbody>
 <%= for prime_calculator <- @prime_calculators do %>
     <tr>
-      <td><%= prime_calculator.limit %></td>
+      <td><%= format_number(prime_calculator.limit) %></td>
       <td><%= prime_calculator.status %></td>
-      <td><%= prime_calculator.max_prime %></td>   
-      <td><%= prime_calculator.num_primes %></td>         
-      <td><%= prime_calculator.elapsed_time %></td>
+      <td><%= format_number(prime_calculator.max_prime) %></td>   
+      <td><%= format_number prime_calculator.num_primes %></td>         
+      <td><%= format_number prime_calculator.elapsed_time %></td>
+      <td><%= format_number(prime_calculator.elapsed_time / 1_000_000) %>
     </tr>
 <% end %>
   </tbody>
 </table>
+
+<dl class="inline">
+  <dt>CPUs:</dt>
+  <dd><%= :erlang.system_info(:logical_processors) %></dd>  
+  <dt>CPUs Available:</dt>
+  <dd><%= :erlang.system_info(:logical_processors_available) %></dd>
+  <dt>CPUs Online:</dt>
+  <dd><%= :erlang.system_info(:logical_processors_online) %></dd>    
+  <dt>Schedulers:</dt>
+  <dd><%= :erlang.system_info(:schedulers) %></dd>
+  <dt>Schedulers Online:</dt>
+  <dd><%= :erlang.system_info(:schedulers_online) %></dd>
+</dl>
 
 <span><%= link "New Prime calculator", to: Routes.prime_calculator_path(@conn, :new) %></span>
