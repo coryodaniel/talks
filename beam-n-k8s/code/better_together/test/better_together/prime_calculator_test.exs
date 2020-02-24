@@ -32,4 +32,24 @@ defmodule BetterTogether.PrimeCalculatorTest do
     primes = wait_for_primes(pid)
     assert List.last(primes) == hundred_thousandth_prime
   end
+
+  test "counts the sieves" do
+    thousandth_prime = 7919
+    {:ok, pid} = BetterTogether.PrimeCalculator.start_link(thousandth_prime)
+    wait_for_primes(pid)
+
+    %{sieve_count: count} = BetterTogether.PrimeCalculator.status(pid)
+    assert count == 43
+  end
+
+  describe "elapsed/1" do
+    test "calculates elapsed time" do
+      thousandth_prime = 7919
+      {:ok, pid} = BetterTogether.PrimeCalculator.start_link(thousandth_prime)
+      wait_for_primes(pid)
+
+      microseconds = BetterTogether.PrimeCalculator.elapsed(pid)
+      assert microseconds < 10000
+    end
+  end
 end

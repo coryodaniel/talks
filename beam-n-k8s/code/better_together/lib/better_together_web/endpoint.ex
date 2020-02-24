@@ -10,8 +10,6 @@ defmodule BetterTogetherWeb.Endpoint do
     signing_salt: "WyM8zTmc"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
-
   socket "/socket", BetterTogetherWeb.UserSocket,
     websocket: true,
     longpoll: false

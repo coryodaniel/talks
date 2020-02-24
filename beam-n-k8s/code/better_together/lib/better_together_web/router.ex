@@ -4,7 +4,7 @@ defmodule BetterTogetherWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_live_flash
+    plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -13,8 +13,6 @@ defmodule BetterTogetherWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    resources "/prime_calculators", PrimeCalculatorController    
-    live "/primes", PrimesLive.Index
-    live "/primes/new", PrimesLive.New
+    resources "/prime_calculators", PrimeCalculatorController
   end
 end

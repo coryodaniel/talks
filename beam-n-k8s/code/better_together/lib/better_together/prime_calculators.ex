@@ -10,13 +10,14 @@ defmodule BetterTogether.PrimeCalculators do
   """
   def list_prime_calculators do
     []
-    #Repo.all(PrimeCalculator)
+    # Repo.all(PrimeCalculator)
   end
 
   @doc """
   Gets a single prime_calculator.
   """
-  def get_prime_calculator!(id), do: :ok #Repo.get!(PrimeCalculator, id)
+  # Repo.get!(PrimeCalculator, id)
+  def get_prime_calculator!(id), do: :ok
 
   @doc """
   Creates a prime_calculator.

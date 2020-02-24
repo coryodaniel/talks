@@ -34,8 +34,7 @@ defmodule BetterTogether.MixProject do
     [
       {:phoenix, "~> 1.4.14"},
       {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_html, "~> 2.11"},      
-      {:phoenix_live_view, "~> 0.8.0"},
+      {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},

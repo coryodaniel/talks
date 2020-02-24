@@ -12,8 +12,7 @@ config :better_together, BetterTogetherWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "BrsNLUSQsJyd3/u6iko2e3oMb4+JdtX2ZkaHSZiQHFG6C7q41kVKprEmdRVhcyi9",
   render_errors: [view: BetterTogetherWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: BetterTogether.PubSub, adapter: Phoenix.PubSub.PG2],
-  live_view: [signing_salt: "Y+/n/7p+"]
+  pubsub: [name: BetterTogether.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -21,8 +20,6 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :phoenix, :json_library, Jason
-
-config :phoenix, template_engines: [leex: Phoenix.LiveView.Engine]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

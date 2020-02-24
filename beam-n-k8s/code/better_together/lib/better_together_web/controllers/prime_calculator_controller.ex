@@ -10,8 +10,8 @@ defmodule BetterTogetherWeb.PrimeCalculatorController do
   end
 
   def new(conn, _params) do
-    #changeset = PrimeCalculators.change_prime_calculator(%PrimeCalculator{})
-    #changeset = %{}
+    # changeset = PrimeCalculators.change_prime_calculator(%PrimeCalculator{})
+    # changeset = %{}
     render(conn, "new.html", conn: conn)
   end
 
@@ -23,7 +23,7 @@ defmodule BetterTogetherWeb.PrimeCalculatorController do
         |> redirect(to: Routes.prime_calculator_path(conn, :index))
 
       _error ->
-      #{:error, %Ecto.Changeset{} = changeset} ->
+        # {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", conn: conn)
     end
   end
