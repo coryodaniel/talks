@@ -4,6 +4,11 @@
   <thead>
     <tr>
       <th>Limit</th>
+      <th>Completed</th>
+      <th>Sieves</th>
+      <th>Elapsed Time (ms)</th>
+      <th>Max Prime</th>
+      <th>Num Primes</th>
 
       <th></th>
     </tr>
@@ -12,11 +17,16 @@
 <%= for prime_calculator <- @prime_calculators do %>
     <tr>
       <td><%= prime_calculator.limit %></td>
+      <td><%= prime_calculator.completed %></td>
+      <td><%= prime_calculator.sieve_count %></td>
+      <td><%= prime_calculator.elapsed %></td>
+      <td><%= prime_calculator.max_prime %></td>
+      <td><%= prime_calculator.num_primes %></td>
 
       <td>
-        <span><%= link "Show", to: Routes.prime_calculator_path(@conn, :show, prime_calculator) %></span>
-        <span><%= link "Edit", to: Routes.prime_calculator_path(@conn, :edit, prime_calculator) %></span>
-        <span><%= link "Delete", to: Routes.prime_calculator_path(@conn, :delete, prime_calculator), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <!--
+          <span><%= link "Show", to: Routes.prime_calculator_path(@conn, :show, prime_calculator) %></span>
+        -->
       </td>
     </tr>
 <% end %>

@@ -1,5 +1,0 @@
-<h1>Edit Prime calculator</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.prime_calculator_path(@conn, :update, @prime_calculator)) %>
-
-<span><%= link "Back", to: Routes.prime_calculator_path(@conn, :index) %></span>

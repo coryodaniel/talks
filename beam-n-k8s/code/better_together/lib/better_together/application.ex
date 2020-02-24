@@ -6,18 +6,17 @@ defmodule BetterTogether.Application do
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
     children = [
-      # Start the endpoint when the application starts
-      BetterTogetherWeb.Endpoint
-      # Starts a worker by calling: BetterTogether.Worker.start_link(arg)
-      # {BetterTogether.Worker, arg},
+      BetterTogetherWeb.Endpoint,
+      {DynamicSupervisor, strategy: :one_for_one, name: BetterTogether.PrimeCalculators}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: BetterTogether.Supervisor]
-    Supervisor.start_link(children, opts)
+    supervisor = Supervisor.start_link(children, opts)
+
+    start_calcs([1000, 5000, 10000, 20000])
+
+    supervisor
   end
 
   # Tell Phoenix to update the endpoint configuration
@@ -25,5 +24,11 @@ defmodule BetterTogether.Application do
   def config_change(changed, _new, removed) do
     BetterTogetherWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def start_calcs(defaults) do
+    Enum.each defaults, fn(limit) -> 
+      BetterTogether.PrimeCalculators.create_prime_calculator(limit)
+    end
   end
 end
