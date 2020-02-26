@@ -1,4 +1,5 @@
 theme: work, 3
+slidenumbers: true
 
 <!-- # [fit] BEAM and Kubernetes: 
 # [fit] Better Together? -->
@@ -12,10 +13,12 @@ theme: work, 3
 # <br />
 # BEAM
 # and
-# Kubernetes
+# Kubernetes:
 # [fit] Better Together?
 
 ![original](images/amorgos-greece.jpg)
+
+^ I'm here to guide you through the stormy seas of Kubernetes.
 
 ---
 
@@ -77,9 +80,11 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ---
 
-^ K8s and the BEAM are very different systems, so its a little odd to compare.
+^ When we look at the features that the BEAM lacks here, we can see that Kubernetes can really put the wind in your sails.
 
-^ But you can see there are a lot of areas where the BEAM doesnt have an out of the box solution
+^ So the easy aanswer is of course: <consultant hat>, yes, they are better together
+
+^ but...
 
 | Feature                                   | Kubernetes                                            |              Beam or Erlang/OTP              |
 | ----------------------------------------- | :---------------------------------------------------- | :------------------------------------------: |
@@ -105,11 +110,7 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 # [fit] **better**
 # [fit] together?
 
-^ And so, we come back to this question.
-
-^ Bad news, I'm not going to answer this for you.
-
-^ I'm hoping to help _you_ answer it.
+^ When asking this question, we've already made an assumption that we haven't vetted.
 
 ^ Raise your hand if your company is using kubernetes, keep it up
 
@@ -135,6 +136,8 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ^ _your organization_ and Kubernetes: Better Together?
 
+^ **3 MINUTES**
+
 ---
 
 # [fit] Your Startup's 
@@ -153,15 +156,21 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ![right](images/a-real-bitch.jpeg)
 
+^ Before rolling k8s out in an organization, I ask a few questions:
+
+^ [Pause] Actually I ask a lot of questions, but these are the high notes
+
 ^ Do you have an Ops team?
 
-^ No, can your business sacrifice developer time to learn k8s?
+^ No, can your business sacrifice developer time to learn k8s? These are people that are hopefully building revenue generating features.
 
 ^ Could you reliabily run on Heroku, Zeit, Fargate, or Gigalixer?
 
 ^ My motto when approaching new projects is: Bring your experience, not your solutions.
 
 ^ Im familiar with the benefits Kubernetes brings and I use Kubernetes for all of my local development, but its certainly not a need.
+
+^ **4:30 MINUTES**
 
 ---
 
@@ -181,7 +190,7 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ^ Kubernetes REST API, CRDs, and kubectl
 
-^ not home grown complexity
+^ Learned Complexity is a feature, home grown complexity is debt
 
 ^ 100s of companies have contributed to k8s in the last year including: Apple, Amazon, Red Hat, Google, VM Ware, Spotify, Tesla
 
@@ -209,6 +218,8 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ---
 # Kubernetes Best Features
+
+^ These features here, aren't offered by a single cloud provider.
 
 ^ So lets look at these features.
 
@@ -245,7 +256,7 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 - Deployin' with _bash_
 - _LOL_ for rollbacks
 - _Terraform_ or _aws-cli_ for Autoscaling Groups
-- Load Balancers, DNS Records, Health Checks, Access Control, _Billy Joel_
+- Load Balancers, DNS Records, Health Checks, Access Control
 - Ports, Firewalls, IAM
 - Do I need a _sErvIce MeSH?!1!_
 
@@ -257,6 +268,10 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 # [fit] **WHEW!**
 
 That's a lot of tooling.
+
+^ WHEW
+
+^ Someone should mash that last slide up with "We Didnt Start Fire"
 
 ^ Lots of things to cobble together
 
@@ -272,7 +287,9 @@ That's a lot of tooling.
 
 ^ Ok, lets go create a new Launch Config, assign it to our ASG, roll out new instances, and terminate the old ones.
 
-^ Not only do we build a lot of complexity into our apps, we build a lot of complexity in to our deployment, ci/cd, and our infrastructure
+^ Not only are we building more complex applications, we are building more complex operations.
+
+^ **7:30 MINUTES**
 
 ---
 
@@ -301,7 +318,7 @@ That's a lot of tooling.
 # [fit] Kubernetes
 # is
 # [fit] ~~Complicated~~ 
-# [fit] **Learned** Complexity
+# [fit] **Learned Complexity**
 
 <!-- ^ Do you need Kubernetes? No. Do you need a unified tool for managing cloud resources and workloads lifecycles? Probably. -->
 
@@ -309,13 +326,19 @@ That's a lot of tooling.
 
 ^ Logging, metrics, and alerting all via the same API.
 
-^ And while we are about to look at some technical Kubernetes features, I would argue the best two features of Kubernetes are the API and the learned complexity that can be reused from project-to-project.
+^ And while we are about to look at some technical Kubernetes features, I would argue that these two features (API & Learned Complexity) are what you come to Kubernetes for.
+
+^ Learned complexity that you can take from job-to-job, project-to-project, and cloud-to-cloud.
+
+^ **8:30 MINUTES**
 
 ---
 
 ^ I have a prediction.
 
-> In the next few years the Kubernetes API will become the common API for interfacing with cloud resources.
+> In the next few years, the Kubernetes API will become the common API for interfacing with cloud resources.
+
+^ I'm going to say it again just in case someone wants to record a video to call me out in three years.
 
 ^ That may sound crazy, but...
 
@@ -332,13 +355,12 @@ That's a lot of tooling.
 
 ^ AWS had released the service operator (SNS, SQS, Memcached, Redis)
 
-^ GCP released Config Connector, which in typical cloud provider fashion has a name that means absolutely nothing, but it allows any GCP resource to be managed by the Kubernetes API.
+^ GCP released Config Connector, it allows any GCP resource to be managed by the Kubernetes API.
 
-^ I'm sure it'll be only weeks before the deprecate it, but in the meantime
+^ Its Google, so they could deprecate it any moment, 
+but in the meantime I can manage all of my resources on GCP with kubectl. 
 
-^ I can manage all of my resources on GCP with kubectl. 
-
-^ No need for DeploymentManager, Terraform, or gcloud CLI
+^ There is still some work here to do on these tools, but its plausible that one day there won't be need for DeploymentManager, Terraform, or gcloud CLI
 
 ---
 [.text: alignment(center)]
@@ -369,6 +391,18 @@ That's a lot of tooling.
 
 ---
 
+[.build-lists: true]
+
+# Recap:
+# What to pitch people 
+# on when **considering Kubernetes**
+
+* A simple, _extendable_ API and client
+* Learned Complexity
+* Community
+
+---
+
 # [fit] The risk 
 # of 
 # [fit] Kubernetes
@@ -388,11 +422,13 @@ That's a lot of tooling.
 ---
 
 # [fit] Don't Expose Kubernetes to Developers
-# [fit] Expose 
-# [fit] Continuous
-# [fit] Deployment
+# [fit] Use 
+# [fit] **Continuous**
+# [fit] **Deployment**
 
-^ A lot of useful features, but if your org isn't ready, start with something simpler. Get a solid CI/CD deployment in place and migrate to kubernetes without your application developers ever noticing.
+^ When deploying kubernetes (read slide)
+
+^ Having a good CI/CD pipeline in place first, will make for a smoother Kubernetes migration.
 
 [.footer: Don't be a gatekeeper, though, curiousity drives innovation.]
 
@@ -409,15 +445,31 @@ That's a lot of tooling.
 ---
 
 # Spoiler Alert:
-# [fit] No
+# [fit] **No**
 # [fit] It 
 # [fit] Doesn't
+
+---
+
+# Spoiler Alert:
+# [fit] No
+# [fit] **It** 
+# [fit] Doesn't
+
+---
+
+# Spoiler Alert:
+# [fit] No
+# [fit] It 
+# [fit] **Doesn't**
 
 ---
 
 [.text: alignment(center)]
 
 # [fit] A **"declarative"** interface
+
+^ Kubernetes has a (AIR QUOTES) declarative interface
 
 > One person's declarative is another person's imperative
 > -- me
@@ -442,7 +494,9 @@ That's a lot of tooling.
 
 [.code-highlight: 28-32]
 
-^ Now, I love YAML, but in the wise words of Duke Ellington.
+^ This is an excerpt from the eviction operator YAML manifest generated by Bonny. Its about 180 lines long.
+
+^ Now, I love YAML, but in the wise words of Johann Bach
 
 ```yaml
 apiVersion: apps/v1
@@ -484,14 +538,21 @@ spec:
 
 ---
 
-> F*ck, that noise.
--- Duke Ellington
+> F*ck that noise.
+-- Johann Bach
 
 ---
 
-# [fit] Ops wants 
-# [fit] **Kubernetes**
+# [fit] **Ops wants**
+# [fit] **Kubernetes,**
 # [fit] Devs want
+# [fit] Heroku
+
+---
+
+# [fit] Ops wants
+# [fit] Kubernetes,
+# [fit] **Devs want**
 # [fit] **Heroku**
 
 ^ Want to see a declarative interface for deploying an app?
@@ -517,6 +578,17 @@ spec:
 ^ let's talk about what we are here for.
 
 ---
+
+* Deployments, rollout, and resources (QoS)
+  * busywait, schedulers
+* Service discover, DNS, process handoff
+* hpa/vpa
+* affinity, anti-affinity (terminate a node)
+* poddistruptionbudget
+* [bonus] securityContext, PodSecurityPolicy, Distroless
+
+---
+
 
 ^ Lightning Round.
 

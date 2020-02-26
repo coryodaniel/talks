@@ -1,10 +1,38 @@
-<section class="row">
-  <article class="column">
-    <h1>Prime Calculator</h1>
-    <ul>
-      <li>
-        <a href="/prime_calculators">Prime Calculators</a>
-      </li>
-    </ul>
-  </article>
-</section>
+<div>
+  <section class="row">
+    <article class="column">
+      <h2>CPU / Schedulers</h2>
+      <dl class="inline">
+        <dt>CPUs:</dt>
+        <dd><%= :erlang.system_info(:logical_processors) %></dd>  
+        <dt>CPUs Available:</dt>
+        <dd><%= :erlang.system_info(:logical_processors_available) %></dd>
+        <dt>CPUs Online:</dt>
+        <dd><%= :erlang.system_info(:logical_processors_online) %></dd>    
+        <dt>Schedulers:</dt>
+        <dd><%= :erlang.system_info(:schedulers) %></dd>
+        <dt>Schedulers Online:</dt>
+        <dd><%= :erlang.system_info(:schedulers_online) %></dd>
+      </dl>  
+    </article>  
+    <article class="column">
+      <h2>Elixir Nodes</h2>
+      <ul>
+        <li><%= Node.self() %> (this node)</li>
+        <%= for node <- Node.list() do %>
+          <li><%= node %></li>
+        <% end %>        
+      </ul>
+    </article>  
+  </section>
+  <section class="row">
+    <article class="column">
+      <h2>Prime Calculators</h2>
+      <ul>
+        <li>
+          <a href="/prime_calculators">Prime Calculators</a>
+        </li>
+      </ul>
+    </article>
+  </section>
+</div>

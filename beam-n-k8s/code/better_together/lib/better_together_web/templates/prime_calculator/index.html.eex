@@ -25,17 +25,4 @@
   </tbody>
 </table>
 
-<dl class="inline">
-  <dt>CPUs:</dt>
-  <dd><%= :erlang.system_info(:logical_processors) %></dd>  
-  <dt>CPUs Available:</dt>
-  <dd><%= :erlang.system_info(:logical_processors_available) %></dd>
-  <dt>CPUs Online:</dt>
-  <dd><%= :erlang.system_info(:logical_processors_online) %></dd>    
-  <dt>Schedulers:</dt>
-  <dd><%= :erlang.system_info(:schedulers) %></dd>
-  <dt>Schedulers Online:</dt>
-  <dd><%= :erlang.system_info(:schedulers_online) %></dd>
-</dl>
-
 <span><%= link "New Prime calculator", to: Routes.prime_calculator_path(@conn, :new) %></span>

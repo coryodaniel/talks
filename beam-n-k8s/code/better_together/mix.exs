@@ -4,7 +4,7 @@ defmodule BetterTogether.MixProject do
   def project do
     [
       app: :better_together,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -32,6 +32,7 @@ defmodule BetterTogether.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:libcluster, "~> 3.2"},
       {:phoenix, "~> 1.4.14"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_html, "~> 2.11"},

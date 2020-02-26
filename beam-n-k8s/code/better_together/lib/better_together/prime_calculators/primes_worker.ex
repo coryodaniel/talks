@@ -1,6 +1,7 @@
 defmodule BetterTogether.PrimeCalculators.PrimesWorker do
   use GenServer
   alias BetterTogether.PrimeCalculators.Primes
+  require Logger
 
   defmodule State do
     defstruct limit: nil, status: :not_started, elapsed_time: 0, num_primes: 0, max_prime: nil
@@ -22,6 +23,7 @@ defmodule BetterTogether.PrimeCalculators.PrimesWorker do
   def handle_call(:results, _from, state), do: {:reply, state, state}
 
   def handle_info(:calculate, state) do
+    Logger.info("Calculating up to: #{state.limit}")
     new_state = %State{state | status: :calculating}
     server_pid = self()
 
@@ -39,6 +41,7 @@ defmodule BetterTogether.PrimeCalculators.PrimesWorker do
   Handles reporting results back to `PrimesWorker`
   """
   def handle_info({:report_results, {max_prime, num_primes, elapsed_time}}, state) do
+    Logger.info("Reporting results: #{max_prime}")
     new_state = %State{
       state
       | elapsed_time: elapsed_time,

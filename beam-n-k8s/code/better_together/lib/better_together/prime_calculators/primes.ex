@@ -5,11 +5,8 @@ defmodule BetterTogether.PrimeCalculators.Primes do
   Credit: [github.com/ybod/](https://github.com/ybod/elixir_primes/blob/master/lib/sieve_of_eratosthenes_mapset.ex)
   """
 
-  alias Primes.Helper.Sequence
-
   @doc """
   Returns the list of the prime numbers up to the given limit. Limit must be integer and larger than 1.
-
   """
   @spec get_primes_list(pos_integer) :: [pos_integer]
   def get_primes_list(limit) when limit == 2, do: [2]

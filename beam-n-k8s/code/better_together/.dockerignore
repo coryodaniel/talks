@@ -1,0 +1,15 @@
+.dockerignore
+.git
+.log
+tmp
+
+# Mix artifacts
+_build
+deps
+*.ez
+
+# don't include our release builds
+releases
+
+# Generate on crash by the VM
+erl_crash.dump

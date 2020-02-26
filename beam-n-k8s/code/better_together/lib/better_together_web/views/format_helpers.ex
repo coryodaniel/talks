@@ -12,5 +12,5 @@ defmodule BetterTogetherWeb.FormatHelpers do
     |> String.reverse()
   end
 
-  def format_number(other), do: other  
+  def format_number(other), do: other
 end

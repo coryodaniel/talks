@@ -6,7 +6,10 @@ defmodule BetterTogether.Application do
   use Application
 
   def start(_type, _args) do
+    topologies = Application.get_env(:libcluster, :topologies) || []
+
     children = [
+      {Cluster.Supervisor, [topologies, [name: BetterTogether.ClusterSupervisor]]},
       BetterTogetherWeb.Endpoint,
       {DynamicSupervisor, strategy: :one_for_one, name: BetterTogether.PrimeCalculators}
     ]
@@ -14,7 +17,8 @@ defmodule BetterTogether.Application do
     opts = [strategy: :one_for_one, name: BetterTogether.Supervisor]
     supervisor = Supervisor.start_link(children, opts)
 
-    start_calcs()
+    start_calcs(:fast)
+    #start_calcs(:slow)
 
     supervisor
   end
@@ -26,20 +30,23 @@ defmodule BetterTogether.Application do
     :ok
   end
 
-  def start_calcs() do
-    defaults = [1_000, 10_000, 100_000, 1_000_000, 10_000_000]
-
-    Enum.each(defaults, fn limit ->
+  def start_calcs(:fast) do
+    fast = [1_000, 10_000, 100_000]
+    Enum.each(fast, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)
     end)
+  end
 
+  def start_calcs(:slow) do  
+    # slow_occurrences = :erlang.system_info(:logical_processors)    
+    slow_occurrences = 1
+    
     # Takes about 2 min on my macbook
     slow_limit = 100_000_000
-    slow_occurrences = :erlang.system_info(:logical_processors)    
     slow = List.duplicate(slow_limit, slow_occurrences)
-
+  
     Enum.each(slow, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)
-    end)
+    end)    
   end
 end
