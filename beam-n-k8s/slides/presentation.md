@@ -579,6 +579,8 @@ spec:
 
 ---
 
+# @ WORK IN PROGRESS...
+
 * Deployments, rollout, and resources (QoS)
   * busywait, schedulers
 * Service discover, DNS, process handoff
