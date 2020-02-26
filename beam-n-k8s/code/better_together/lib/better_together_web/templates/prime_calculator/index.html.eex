@@ -7,7 +7,6 @@
       <th>Status</th>
       <th>Max Prime</th>      
       <th>Num Primes</th>
-      <th>Elapsed Time (μs)</th>     
       <th>Elapsed Time (s)</th> 
     </tr>
   </thead>
@@ -18,7 +17,6 @@
       <td><%= prime_calculator.status %></td>
       <td><%= format_number(prime_calculator.max_prime) %></td>   
       <td><%= format_number prime_calculator.num_primes %></td>         
-      <td><%= format_number prime_calculator.elapsed_time %></td>
       <td><%= format_number(prime_calculator.elapsed_time / 1_000_000) %>
     </tr>
 <% end %>

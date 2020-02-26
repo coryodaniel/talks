@@ -18,7 +18,7 @@ defmodule BetterTogether.Application do
     supervisor = Supervisor.start_link(children, opts)
 
     start_calcs(:fast)
-    #start_calcs(:slow)
+    # start_calcs(:slow)
 
     supervisor
   end
@@ -32,21 +32,22 @@ defmodule BetterTogether.Application do
 
   def start_calcs(:fast) do
     fast = [1_000, 10_000, 100_000]
+
     Enum.each(fast, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)
     end)
   end
 
-  def start_calcs(:slow) do  
+  def start_calcs(:slow) do
     # slow_occurrences = :erlang.system_info(:logical_processors)    
     slow_occurrences = 1
-    
+
     # Takes about 2 min on my macbook
     slow_limit = 100_000_000
     slow = List.duplicate(slow_limit, slow_occurrences)
-  
+
     Enum.each(slow, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)
-    end)    
+    end)
   end
 end
