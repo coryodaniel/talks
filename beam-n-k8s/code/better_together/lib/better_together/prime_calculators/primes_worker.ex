@@ -16,7 +16,10 @@ defmodule BetterTogether.PrimeCalculators.PrimesWorker do
               max_prime: nil
   end
 
-  def start_link(limit), do: GenServer.start_link(__MODULE__, %State{limit: limit})
+  def start_link(limit) do
+    Logger.info("start_link: #{inspect(limit)}")
+    GenServer.start_link(__MODULE__, %State{limit: limit})
+  end
 
   @doc """
   Check the results of a `PrimesWorker`
@@ -25,6 +28,9 @@ defmodule BetterTogether.PrimeCalculators.PrimesWorker do
 
   ### Server
   def init(%State{} = state) do
+    Logger.info("init: #{inspect(state)}")
+    Process.flag(:trap_exit, true)
+
     Task.async(Primes, :get_primes_list, [state.limit])
     init_state = %State{state | started_at: Time.utc_now(), status: :calculating}
     {:ok, init_state}
@@ -32,36 +38,27 @@ defmodule BetterTogether.PrimeCalculators.PrimesWorker do
 
   def handle_call(:results, _from, state), do: {:reply, state, state}
 
-  # called when a handoff has been initiated due to changes
-  # in cluster topology, valid response values are:
-  #
-  #   - `:restart`, to simply restart the process on the new node
-  #   - `{:resume, state}`, to hand off some state to the new process
-  #   - `:ignore`, to leave the process running on its current node
-  #
+  # Handoff initiated
   def handle_call({:swarm, :begin_handoff}, _from, state) do
     # TODO: if received SIGTERM, then handoff, else ignore
+    Logger.info("begin_handoff: #{inspect(state)}")
     {:reply, {:resume, state}, state}
   end
 
   # This is triggered whenever a process has been restarted on a new node.
   def handle_cast({:swarm, :end_handoff, incoming_state}, _current_state) do
-    # TODO: should restart the task if it wasn't complete
+    Logger.info("end_handoff: #{inspect(incoming_state)}")
+    # TODO: should restart the Talsk if it wasn't complete
     {:noreply, incoming_state}
   end
-  
-  # called when a network split is healed and the local process
-  # should continue running, but a duplicate process on the other
-  # side of the split is handing off its state to us. You can choose
-  # to ignore the handoff state, or apply your own conflict resolution
-  # strategy
-  def handle_cast({:swarm, :resolve_conflict, _incoming_state}, state) do
-    {:noreply, state}
+
+  # called when a netsplit is resolved
+  def handle_cast({:swarm, :resolve_conflict, incoming_state}, _current_state) do
+    Logger.info("resolve_conflict: #{inspect(incoming_state)}")
+    {:noreply, incoming_state}
   end
 
-  @doc """
-  Handles reporting results back to `Task`
-  """  
+  # Handles calculation results from `Task` in `init/1`
   def handle_info({_task, primes}, %State{} = state) when is_list(primes) do
     ended_at = Time.utc_now()
 
@@ -77,12 +74,15 @@ defmodule BetterTogether.PrimeCalculators.PrimesWorker do
     {:noreply, new_state}
   end
 
-  # this message is sent when this process should die
-  # because it is being moved, use this as an opportunity
-  # to clean up
+  # Called when process should die because it is being moved
   def handle_info({:swarm, :die}, state) do
     {:stop, :shutdown, state}
   end
 
-  def handle_info(_, state), do: {:noreply, state}    
+  def handle_info(_, state), do: {:noreply, state}
+
+  def terminate(_reason, state) do
+    IO.puts "terminate: #{inspect(state)}"
+    Swarm.Tracker.handoff(__MODULE__, state)
+  end
 end

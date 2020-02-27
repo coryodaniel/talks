@@ -3,18 +3,25 @@ defmodule BetterTogether.PrimeCalculators do
   The PrimeCalculators context.
   """
 
-  alias BetterTogether.PrimeCalculators.{PrimeDynamicSupervisor,PrimesWorker}
+  @group_name :calculators
+  @chars "abcdefghijklmnopqrstuvwxyz" |> String.split("")
 
-  # Swarm Group Name
-  def group_name(), do: __MODULE__
+  alias BetterTogether.PrimeCalculators.{PrimeDynamicSupervisor, PrimesWorker}
 
   @doc """
   Returns the list of prime_calculators.
   """
   def list_prime_calculators do
-    PrimeDynamicSupervisor
-    |> DynamicSupervisor.which_children()
-    |> Enum.map(&dynamic_child_to_map/1)
+    @group_name
+    |> Swarm.members()
+    |> Enum.reduce([], fn pid, acc ->
+      node = :erlang.node(pid)
+      calc_state = :rpc.call(node, PrimesWorker, :results, [pid])
+      calc_loc = %{pid: pid, node: node}
+      calc = Map.merge(calc_state, calc_loc)
+
+      [calc | acc]
+    end)
   end
 
   @doc """
@@ -28,28 +35,22 @@ defmodule BetterTogether.PrimeCalculators do
   end
 
   def create_prime_calculator(limit) when is_integer(limit) do
-    {:ok, pid} = Swarm.register_name(
-      gen_name(),
-      PrimeDynamicSupervisor,
-      :register,
-      [{PrimesWorker, limit}]
-    )
+    {:ok, pid} =
+      Swarm.register_name(
+        gen_name(),
+        PrimeDynamicSupervisor,
+        :register,
+        [{PrimesWorker, limit}]
+      )
 
-    Swarm.join(group_name(), pid)
-    {:ok, pid} 
+    Swarm.join(@group_name, pid)
+    {:ok, pid}
   end
 
-  def dynamic_child_to_map({_, pid, _, [mod]}) do
-    pid
-    |> mod.results()
-    |> Map.put(:pid, pid)
-  end
-
-  @chars "abcdefghijklmnopqrstuvwxyz" |> String.split("")
   defp gen_name() do
-    (1..10)
-    |> Enum.reduce([], fn (_i, acc) -> [Enum.random(@chars) | acc] end) 
+    1..10
+    |> Enum.reduce([], fn _i, acc -> [Enum.random(@chars) | acc] end)
     |> Enum.join("")
-    |> String.to_atom
+    |> String.to_atom()
   end
 end

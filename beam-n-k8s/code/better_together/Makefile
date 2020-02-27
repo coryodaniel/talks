@@ -1,4 +1,4 @@
-REPO=quay.io/coryodaniel/better_together
+REPO:=quay.io/coryodaniel/better_together
 
 .PHONY: all
 all: docker destroy deploy logs
@@ -31,12 +31,12 @@ destroy:
 logs:
 	stern better --tail 5
 
-POD_NAME:=$(shell kubectl get pods | grep better-together | head -n1 | awk '{print $$1}')
+POD_NAME=$(shell kubectl get pods | grep better-together | head -n1 | awk '{print $$1}')
 .PHONY: shell
 shell:
 	kubectl exec -it ${POD_NAME} -- /bin/sh
 
-SVC_NODE_PORT:=$(shell kubectl get svc/better-together-web -o=jsonpath='{.spec.ports[0].nodePort}')
+SVC_NODE_PORT=$(shell kubectl get svc/better-together-web -o=jsonpath='{.spec.ports[0].nodePort}')
 .PHONY: open
 open:
 	open http://localhost:${SVC_NODE_PORT}

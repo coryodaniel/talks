@@ -14,5 +14,6 @@ defmodule BetterTogetherWeb.Router do
 
     get "/", PageController, :index
     resources "/prime_calculators", PrimeCalculatorController
+    forward("/health", Plugs.Health)
   end
 end

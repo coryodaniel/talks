@@ -15,5 +15,5 @@ defmodule BetterTogether.PrimeCalculators.PrimeDynamicSupervisor do
 
   def register(worker_name) do
     DynamicSupervisor.start_child(__MODULE__, worker_name)
-  end  
+  end
 end

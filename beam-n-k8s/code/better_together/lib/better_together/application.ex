@@ -11,13 +11,14 @@ defmodule BetterTogether.Application do
     children = [
       {Cluster.Supervisor, [topologies, [name: BetterTogether.ClusterSupervisor]]},
       BetterTogetherWeb.Endpoint,
-      {DynamicSupervisor, strategy: :one_for_one, name: BetterTogether.PrimeCalculators.PrimeDynamicSupervisor}
+      {DynamicSupervisor,
+       strategy: :one_for_one, name: BetterTogether.PrimeCalculators.PrimeDynamicSupervisor}
     ]
 
     opts = [strategy: :one_for_one, name: BetterTogether.Supervisor]
     supervisor = Supervisor.start_link(children, opts)
 
-    start_calcs(:fast)
+    # start_calcs(:fast)
     # start_calcs(:slow)
 
     supervisor

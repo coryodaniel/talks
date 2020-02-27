@@ -20,11 +20,10 @@
         <td><%= format_number(prime_calculator.max_prime) %></td>   
         <td><%= format_number(prime_calculator.num_primes) %></td>         
         <td><%= inspect(prime_calculator.pid) %>
-        <td><%= :erlang.node(prime_calculator.pid) %>
+        <td><%= prime_calculator.node %>
         <td><%= format_number(prime_calculator.elapsed_time / 1_000_000) %>
       </tr>
     <% end %>
   </tbody>
-
 </table>
 <span><%= link "New Prime calculator", to: Routes.prime_calculator_path(@conn, :new) %></span>
