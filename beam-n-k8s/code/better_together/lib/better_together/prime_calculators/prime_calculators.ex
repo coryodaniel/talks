@@ -3,22 +3,16 @@ defmodule BetterTogether.PrimeCalculators do
   The PrimeCalculators context.
   """
 
-  use DynamicSupervisor
-  alias BetterTogether.PrimeCalculators.PrimesWorker
+  alias BetterTogether.PrimeCalculators.{PrimeDynamicSupervisor,PrimesWorker}
 
-  def start_link(_arg) do
-    DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
-  end
-
-  def init(:ok) do
-    DynamicSupervisor.init(strategy: :one_for_one)
-  end
+  # Swarm Group Name
+  def group_name(), do: __MODULE__
 
   @doc """
   Returns the list of prime_calculators.
   """
   def list_prime_calculators do
-    __MODULE__
+    PrimeDynamicSupervisor
     |> DynamicSupervisor.which_children()
     |> Enum.map(&dynamic_child_to_map/1)
   end
@@ -34,13 +28,28 @@ defmodule BetterTogether.PrimeCalculators do
   end
 
   def create_prime_calculator(limit) when is_integer(limit) do
-    child_spec = {PrimesWorker, limit}
-    DynamicSupervisor.start_child(__MODULE__, child_spec)
+    {:ok, pid} = Swarm.register_name(
+      gen_name(),
+      PrimeDynamicSupervisor,
+      :register,
+      [{PrimesWorker, limit}]
+    )
+
+    Swarm.join(group_name(), pid)
+    {:ok, pid} 
   end
 
   def dynamic_child_to_map({_, pid, _, [mod]}) do
     pid
     |> mod.results()
-    |> Map.put(:id, "#{inspect(pid)}")
+    |> Map.put(:pid, pid)
+  end
+
+  @chars "abcdefghijklmnopqrstuvwxyz" |> String.split("")
+  defp gen_name() do
+    (1..10)
+    |> Enum.reduce([], fn (_i, acc) -> [Enum.random(@chars) | acc] end) 
+    |> Enum.join("")
+    |> String.to_atom
   end
 end

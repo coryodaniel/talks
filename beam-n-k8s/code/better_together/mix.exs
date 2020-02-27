@@ -33,6 +33,7 @@ defmodule BetterTogether.MixProject do
   defp deps do
     [
       {:libcluster, "~> 3.2"},
+      {:swarm, "~> 3.0"},
       {:phoenix, "~> 1.4.14"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_html, "~> 2.11"},

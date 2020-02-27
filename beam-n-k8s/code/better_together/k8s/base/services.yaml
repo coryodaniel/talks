@@ -13,6 +13,7 @@ kind: Service
 metadata:
   name: better-together-web
 spec:
+  sessionAffinity: None
   type: NodePort
   ports:
     - name: web

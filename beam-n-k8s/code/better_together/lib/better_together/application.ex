@@ -11,7 +11,7 @@ defmodule BetterTogether.Application do
     children = [
       {Cluster.Supervisor, [topologies, [name: BetterTogether.ClusterSupervisor]]},
       BetterTogetherWeb.Endpoint,
-      {DynamicSupervisor, strategy: :one_for_one, name: BetterTogether.PrimeCalculators}
+      {DynamicSupervisor, strategy: :one_for_one, name: BetterTogether.PrimeCalculators.PrimeDynamicSupervisor}
     ]
 
     opts = [strategy: :one_for_one, name: BetterTogether.Supervisor]
@@ -31,7 +31,7 @@ defmodule BetterTogether.Application do
   end
 
   def start_calcs(:fast) do
-    fast = [1_000, 10_000, 100_000]
+    fast = [1_000]
 
     Enum.each(fast, fn limit ->
       BetterTogether.PrimeCalculators.create_prime_calculator(limit)

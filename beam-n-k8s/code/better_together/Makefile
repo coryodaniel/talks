@@ -35,3 +35,8 @@ POD_NAME:=$(shell kubectl get pods | grep better-together | head -n1 | awk '{pri
 .PHONY: shell
 shell:
 	kubectl exec -it ${POD_NAME} -- /bin/sh
+
+SVC_NODE_PORT:=$(shell kubectl get svc/better-together-web -o=jsonpath='{.spec.ports[0].nodePort}')
+.PHONY: open
+open:
+	open http://localhost:${SVC_NODE_PORT}

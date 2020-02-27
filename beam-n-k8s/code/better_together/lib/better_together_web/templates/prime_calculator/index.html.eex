@@ -7,20 +7,24 @@
       <th>Status</th>
       <th>Max Prime</th>      
       <th>Num Primes</th>
+      <th>PID</th>    
+      <th>Node</th>    
       <th>Elapsed Time (s)</th> 
     </tr>
   </thead>
   <tbody>
-<%= for prime_calculator <- @prime_calculators do %>
-    <tr>
-      <td><%= format_number(prime_calculator.limit) %></td>
-      <td><%= prime_calculator.status %></td>
-      <td><%= format_number(prime_calculator.max_prime) %></td>   
-      <td><%= format_number prime_calculator.num_primes %></td>         
-      <td><%= format_number(prime_calculator.elapsed_time / 1_000_000) %>
-    </tr>
-<% end %>
+    <%= for prime_calculator <- @prime_calculators do %>
+      <tr>        
+        <td><%= format_number(prime_calculator.limit) %></td>
+        <td><%= prime_calculator.status %></td>
+        <td><%= format_number(prime_calculator.max_prime) %></td>   
+        <td><%= format_number(prime_calculator.num_primes) %></td>         
+        <td><%= inspect(prime_calculator.pid) %>
+        <td><%= :erlang.node(prime_calculator.pid) %>
+        <td><%= format_number(prime_calculator.elapsed_time / 1_000_000) %>
+      </tr>
+    <% end %>
   </tbody>
-</table>
 
+</table>
 <span><%= link "New Prime calculator", to: Routes.prime_calculator_path(@conn, :new) %></span>
