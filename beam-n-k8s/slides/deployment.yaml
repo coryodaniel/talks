@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+          terminationMessagePath: "/app/erl_crash.dump"
+          ports:
+            - containerPort: 4000
+              name: web
+          env:
+            - name: PORT
+              value: "4000"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 200Mi
+            requests:
+              cpu: 250m
+              memory: 200Mi
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 60
+            httpGet:
+              path: /health
+              port: 4000
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 60
+            httpGet:
+              path: /health
+              port: 4000
