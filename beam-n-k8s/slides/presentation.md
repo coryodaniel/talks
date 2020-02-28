@@ -1,5 +1,4 @@
 theme: work, 3
-slidenumbers: true
 
 <!-- # [fit] BEAM and Kubernetes: 
 # [fit] Better Together? -->
@@ -424,7 +423,7 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 # [fit] Don't Expose Kubernetes to Developers
 # [fit] Use 
 # [fit] **Continuous**
-# [fit] **Deployment**
+# [fit] **Delivery**
 
 ^ When deploying kubernetes (read slide)
 
@@ -571,30 +570,19 @@ spec:
 
 ---
 
-# [fit] So...
-# [fit] **BEAM and Kubernetes:**
-# [fit] Better Together?
+# So...
+# [fit] BEAM
+# [fit] and
+# [fit] Kubernetes:
+# [fit] **Better Together?**
 
 ^ let's talk about what we are here for.
 
 ---
 
-# @ WORK IN PROGRESS...
+^ We aren't going to hit all of these, unless y'all wanna skip lunch? No?
 
-* Deployments, rollout, and resources (QoS)
-  * busywait, schedulers
-* Service discover, DNS, process handoff
-* hpa/vpa
-* affinity, anti-affinity (terminate a node)
-* poddistruptionbudget
-* [bonus] securityContext, PodSecurityPolicy, Distroless
-
----
-
-
-^ Lightning Round.
-
-^ A quick glance at the feature list from earlier and we can see that Kubernetes can add to your applications availability
+^ Ok, fine. There is a nodepool party on the roof at 5PM, meet me up there and we can go through the rest.
 
 | Feature                                   | Kubernetes                                            |              Beam or Erlang/OTP              |   Can k8s Help?    |
 | ----------------------------------------- | :---------------------------------------------------- | :------------------------------------------: | :----------------: |
@@ -614,26 +602,356 @@ spec:
 | Security Templates                        | `PodSecurityPolicy`, `securityContext`                |                      -                       | :white_check_mark: |
 | Metrics                                   | metric-server, custom-metrics-server                  | `erlang:system_info/1` `erlang:statistics/1` | :white_check_mark: |
 
-<!--
+---
+
+^ We are going to hit all of these though.
+
+| Feature                                   | Kubernetes                                            |    Beam or Erlang/OTP     |   Can k8s Help?    |
+| ----------------------------------------- | :---------------------------------------------------- | :-----------------------: | :----------------: |
+| Automated Rollouts / Rollbacks            | `Deployment`, `ReplicaSet`, `StatefulSet`             |     Hot Code Loading      |        :x:         |
+| Automated Scheduling (instance placement) | pod/node affinity/anti-affinity, `resources`          |             -             | :white_check_mark: |
+| Service Discovery / DNS                   | `Service`, `Endpoint`, `EndpointSlices`, external-dns |             -             | :white_check_mark: |
+| Health Checks                             | Shell, TCP, HTTP Health Checks                        |   Supervisors, `-heart`   | :white_check_mark: |
+| Horizontal Scaling                        | `HorizontalPodAutoscaler`                             |   Add nodes :thumbsup:    | :white_check_mark: |
+| Vertical Scaling                          | `VerticalPodAutoscaler`, `resources`                  | Add CPUs / RAM :thumbsup: | :white_check_mark: |
+| QoS                                       | `PodDisruptionBudget`, `resources`                    |             -             | :white_check_mark: |
+| Security Templates                        | `PodSecurityPolicy`, `securityContext`                |             -             | :white_check_mark: |
 
 ---
 
-# But first, Lets talk 9's
+# Deployments
+[.code-highlight: all]
+[.code-highlight: 11]
 
-^ Downside of using Kubernetes API for managing cloud resources
+^ So, if you've seen a Kubernet (singular form of k8s) before, you've definitely worked with Deployments. 
 
-^ If you are chasing the 9 9's in the sky, there are some SLAs to reckon with.
+^ If not, as the name suggests... its an application deployment.
 
-^ Note, this is the Kubernetes API SLAs, assuming instance SLAs would impact apps on or off Kubernetes.
+^ We saw one earlier w/ the eviction operator example, but here is another brief deployment
 
-| Cloud              | Availability | Backing |
-| ------------------ | ------------ | ------- |
-| Azure AKS          | 99.5%        | :x:     |
-| AWS EKS            | 99.9%        | credits |
-| GCP GKE (regional) | 99.95%       | :x:     |
-| GCP GKE (zonal)    | 99.5%        | :x:     |
+^ This is pretty basic. It deploys 3 instances of an application `better_together`
+
+^ Before we get into some of the more interesting kubernetes resources, 
+I wanted to talk about a few attributes of Deployments that can make your applications more resilient.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+          # BestEffort :shrug-fest:
+```
+
+---
+
+# Pod Resources & QoS
+
+[.code-highlight: 12-18]
+
+^ Setting resources requests and limits is critical for a deployment. 
+Not only do they provide a base level of resources for your application, they implicitly determine your quality of service.
+
+^ Kubernetes "rewards" you with a better quality of service, by providing more resource consumption information.
+
+^ Resources are set per container in a pod
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+          resources:
+            limits:
+              cpu: 500m
+              memory: 200Mi
+            requests:
+              cpu: 250m
+              memory: 200Mi          
+```
+
+---
+
+# Pod Resources & QoS
+
+^ Requests will provide you with a CPU and memory baseline
+
+^ Limits help Kubernetes cap CPU utilization and OOM runaway RAM consumption.
+
+^ More importantly, what you put here determines your applications quality of service with regards to scheduling and evicting pods
+
+^ No `resources` settings results in a BestEffort quality of service. This is the shrug emoji of availability
+
+^ Setting a memory or CPU request in at least one container lands you in `Burstable`. Kubernetes will give you the resource you requested, and allow your app to burst above when available.
+
+```yaml
+# Burstable
+resources:
+  limits:
+    cpu: 500m
+    memory: 200Mi
+  requests:
+    cpu: 250m
+    memory: 200Mi   
+```
+---
+
+# Pod Resources & QoS
+
+^ `Guaranteed` QoS is only achieved by each container having resource requests/limits _and_ in each container, they limits/requests must be the same
+
+^ This is really important, because if you are using helm charts, sidecars, or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS
+
+^ LimitRange can be used to set minimum, maximum, and default resource requests and limits for a Namespace.
+
+```yaml
+# Guaranteed
+resources:
+  limits:
+    cpu: 500m
+    memory: 200Mi
+  requests:
+    cpu: 500m
+    memory: 200Mi   
+```
+---
+
+# Deployment Strategy
+
+[.code-highlight: 7-11]
+
+^ Kubenetes supports two deployment strategies, RollingUpdate and Recreate.
+
+^ The Recreate strategy destroys and Recreates the deployment. Its much faster than 
+a RollingUpdate, which makes it nice for development, but since the deployment is destroyed, can result in lower availability.
+
+^ RollingUpdates, as the name suggests, rolls out your update slowly, replacing old pods with new ones.
+
+^ Using a RollingUpdate has a few additional options: maxUnavailable, maxSurge (int, percent)
+Default: 
+* 25% max unavailable
+* 25% max surge
+
+^ Tuning these per application are really important for deployments. It effects rollout time and availability at the expense of resource consumption.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate # or Recreate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 25%
+```
+
+---
+
+# Health Checks
+
+^ Without defining healthchecks, Kubernetes can only make assumptions about your applications health based on resource consumption
+
+> A pod without healthchecks is the Math Lady of Kubernetes
+-- Nick Young
+
+![inline](./images/math-lady-meme.jpg)
+
+---
+
+# Health Checks
+
+^ there are two types of healthchecks, readiness, and liveness.
+
+^ readiness probes let kubernetes know your application is ready to serve traffic
+
+^ liveness probes let kubernetes know your app is ... alive
+
+^ without these, kubernetes may send traffic early or assesses liveliness based on resource settings
+
+^ httpGet, TCP, and shell execs, which allows you to call mix tasks or release commands
+
+```yaml
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 60
+  httpGet:
+    path: /health
+    port: 4000
+livenessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 60
+  httpGet:
+    path: /health
+    port: 4000
+```
+
+---
+
+# Pod lifecycle
+
+^ Pod's have a start and stop lifecycle event where ad-hoc httpGet and execs can be fired.
+
+^ preStop can be used to perform cleanup or execute tasks when a SIGTERM is received. 
+
+^ In this example the host's name is broadcast to all other nodes to let them know its going down.
+
+```yaml
+containers:
+  - name: better-together
+    image: quay.io/coryodaniel/better_together:latest
+    lifecycle:
+      preStop:
+        exec:
+          command: 
+            - bin/better_together
+            - rpc
+            - BetterTogether.notify_node_down()
+```
+
+---
+
+# Pod Termination
+
+[.code-highlight: 2]
+[.code-highlight: 6]
+
+^ Kuberntes will send a SIGTERM to your pods when they are being evicted. 
+By default k8s will wait 30 seconds before sending a SIGKILL.
+
+^ `terminationGracePeriodSeconds` can be set to tune the time in between events. 
+This can be used to tune your application to give it proper time to shutdown cleanly
+
+^ Note: terminationGracePeriodSeconds is set for the pod, not a container
+
+^ The `terminationMessagePath` can be set for each container. 
+
+```yaml
+spec:
+  terminationGracePeriodSeconds: 30
+  containers:
+    - name: better-together
+      image: quay.io/coryodaniel/better_together:latest
+      terminationMessagePath: "/app/erl_crash.dump"
+```
+
+---
+
+```yaml
+apiVersion: v1
+kind: Pod
+...
+    lastState:
+      terminated:
+        containerID: ...
+        exitCode: 1337
+        finishedAt: ...
+        message: |
+          YOUR_CRASH_DUMP_HERE
+        ...
+```
+
+^ Kubernetes will record the termination message in the pods status, which makes it easily accessible from a dashboard or monitoring application.
+
+^ This can be used to ship an erl_crash.dump out of a pod that is crashing.
+
+---
+
+# Affinity
+
+^ Affinity is a really interesting feature of kuberntes.
+
+^ Its actually a few different features, Kubernetes supports: affinity and anti-affinity at the node and pod level.
+
+^ Affinity lets you tell kubernetes to schedule your workloads on certain nodes or as neighbors to certain pods
+
+^ AntiAffinity let you tell kuberntes that you don't want to be on a node or near a certain pod.
+
+@HERE
+
+* Node
+* Pod
+* Affinity
+* AntiAffinity
+
+---
+
+# [fit] QUIRK
+# [fit] **ALERT**
+
+---
+
+QUIRKS, fuck @here.
+^ All that stuff is fine-and-dandy, but Kubernetes, Docker, and BEAM's schedulers and SMP do have some interesting quirks.
+
+* Busy Wait
+* Scheduler count vs. resource requests
+* Concurrency, erlang is great at it, 
+
+> An application can only be as fast as its slowest sequential code (and this includes the erlang VMs sequential code)
+-- _Amdahl's Law_
+
+<!--
+* busywait, schedulers
+  * https://elixirforum.com/t/performance-of-erlang-elixir-in-docker-kubernetes/21493/16
+* Show CPU count, vs resource req/lim, vs schedulers
+* bigger CPUs for erlang, becaause of erlang excels at managing system resources
+
+- Weird 💩
+  - Everything has quirks
+    - vCPUs, cgroups, and schedulers
+    - Busy wait issues
+    - Pod CPU requests and being a good neighbor
+    - CPU Affinity workloads - Where are we? BEAM VM in a container in a VM 
 -->
 
 ---
+
+# PriorityClass
+
+---
+
+# [fit] Service Discovery
+
+* Service discover, DNS
+* Distributing processes
+* *talk* about process handoff w/ swarm
+
+---
+
+# [fit] Horizontal / Vertical Pod Autoscalers
+
+---
+
+# PodDisruptionBudget
+
+---
+
+# **Bonus** Security
+
+securityContext, PodSecurityPolicy, Distroless
+
+---
+
+# Takeaways
+
+Where can we go from here?
+
+kOTP
 
 # Thanks
