@@ -51,6 +51,10 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ^ So, what you're here for, right?
 
+^ I surveyed attendees and it seemed like a good mix of people with and without kubernetes experience,
+so today I want to talk about my approach to deciding on Kubernetes, and then some advanced topics
+for getting better availability out of our BEAM applications.
+
 ---
 
 ^ Don't get hung up on these tables, we are coming back to them later
@@ -404,8 +408,9 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 
 ---
 
-# [fit] The risk 
-# of 
+# [fit] The 
+# [fit] **Risk**
+# [fit] of 
 # [fit] Kubernetes
 
 ![](./images/leaky-boat.jpg)
@@ -444,6 +449,8 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 ^ You might be thinking...
 
 ---
+![](./images/rust-bucket.jpeg)
+
 
 # Spoiler Alert:
 # [fit] **No**
@@ -451,6 +458,7 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 # [fit] Doesn't
 
 ---
+![](./images/skeleton.jpeg)
 
 # Spoiler Alert:
 # [fit] No
@@ -458,6 +466,7 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 # [fit] Doesn't
 
 ---
+![](./images/gunship.jpeg)
 
 # Spoiler Alert:
 # [fit] No
@@ -474,6 +483,11 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 
 > One person's declarative is another person's imperative
 > -- me
+
+^ As Kubernetes gets more and more features I feel like it's declarativeness has slipped away, 
+and we have a lot more places where we _tell_ kubernetes _how_ to run our workloads.
+
+^ This feels leaky, as its creating additional cognitive overload to already complicated applications.
 
 ---
 
@@ -621,17 +635,28 @@ spec:
 
 ---
 
+[.text: alignment(center)]
+
+^ There should be a pair of goggles under everyone's seat.
+
+# [fit] **WARNING!**
+# [fit] YAML 
+# [fit] ALERT
+
+---
+
 # Deployments
 [.code-highlight: all]
+[.code-highlight: 6]
 [.code-highlight: 11]
 
 ^ So, if you've seen a Kubernet (singular form of k8s) before, you've definitely worked with Deployments. 
 
 ^ If not, as the name suggests... its an application deployment.
 
-^ We saw one earlier w/ the eviction operator example, but here is another brief deployment
+^ Most of the YAML here will be truncated, to focus on the topics
 
-^ This is pretty basic. It deploys 3 instances of an application `better_together`
+^ CODE_TRANSITION: It deploys 3 instances of an application CODE_TRANSITION `better_together`, a prime calculator.
 
 ^ Before we get into some of the more interesting kubernetes resources, 
 I wanted to talk about a few attributes of Deployments that can make your applications more resilient.
@@ -648,41 +673,6 @@ spec:
       containers:
         - name: better-together
           image: quay.io/coryodaniel/better_together:latest
-          # BestEffort :shrug-fest:
-```
-
----
-
-# Pod Resources & QoS
-
-[.code-highlight: 12-18]
-
-^ Setting resources requests and limits is critical for a deployment. 
-Not only do they provide a base level of resources for your application, they implicitly determine your quality of service.
-
-^ Kubernetes "rewards" you with a better quality of service, by providing more resource consumption information.
-
-^ Resources are set per container in a pod
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: better-together
-spec:
-  replicas: 3
-  template:
-    spec:
-      containers:
-        - name: better-together
-          image: quay.io/coryodaniel/better_together:latest
-          resources:
-            limits:
-              cpu: 500m
-              memory: 200Mi
-            requests:
-              cpu: 250m
-              memory: 200Mi          
 ```
 
 ---
@@ -697,7 +687,35 @@ spec:
 
 ^ No `resources` settings results in a BestEffort quality of service. This is the shrug emoji of availability
 
-^ Setting a memory or CPU request in at least one container lands you in `Burstable`. Kubernetes will give you the resource you requested, and allow your app to burst above when available.
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+          # BestEffort :shrug-fest:          
+          # resources:
+          #   limits:
+          #     cpu: 500m
+          #     memory: 200Mi
+          #   requests:
+          #     cpu: 250m
+          #     memory: 200Mi          
+```
+
+---
+
+# Pod Resources & QoS
+
+^ Setting a memory or CPU request in at least one container lands you in `Burstable`. 
+
+^ Kubernetes will give you the resource you requested, and allow your app to burst above when available.
 
 ```yaml
 # Burstable
@@ -714,13 +732,14 @@ resources:
 
 # Pod Resources & QoS
 
-^ `Guaranteed` QoS is only achieved by each container having resource limits and either no requests set or, by setting requests to the same value. If not present, k8s will set requests = limits.
+^ `Guaranteed` QoS is only achieved by each container having resource limits and either no requests set or, 
+by setting requests to the same value. If not present, k8s will set requests = limits.
 
-^ If the cluster is configured with a static CPU management policy, containers can be granted exclusive rights to a CPU (cpu affinity). In this case, requests must be set as well, and cannot be fractional
+^ If the cluster is configured with a static CPU management policy, containers can be granted exclusive 
+rights to a CPU (cpu affinity). In this case, requests must be set as well, and cannot be fractional
 
-^ This is really important, because if you are using helm charts, sidecars, or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS
-
-^ LimitRange can be used to set minimum, maximum, and default resource requests and limits for a Namespace.
+^ This is really important, because if you are using sidecars, 
+or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS.
 
 ```yaml
 # Guaranteed
@@ -730,6 +749,8 @@ resources:
     memory: 200Mi
 ```
 
+[.footer: "LimitRange can be used to apply resource requests and limits to all pods in a Namespace"]
+
 ---
 
 ![](./images/pod-qos.png)
@@ -738,6 +759,14 @@ resources:
 
 # QoS Summary
 
+|            Requests             | Limits  | Class      |    CPU Affinity    |
+| :-----------------------------: | :-----: | :--------- | :----------------: |
+|              none               |  none   | BestEffort |        :x:         |
+|             present             |  none   | Burstable  |        :x:         |
+|        none _or_ =limits        | present | Guaranteed |        :x:         |
+| present, integer, _and_ =limits | present | Guaranteed | :white_check_mark: |
+
+<!--
 ^ Scheduling
 
 ^ Guaranteed will get scheduled if there are resources and no DiskPressure
@@ -753,13 +782,7 @@ resources:
 ^ Guaranteed and Burstable and never evicted when below resource requests for another pod
 
 ^ DiskPressure causes BestEffort -> Burstable -> Guaranteed eviction
-
-|            Requests             | Limits  | Class      |    CPU Affinity    |
-| :-----------------------------: | :-----: | :--------- | :----------------: |
-|              none               |  none   | BestEffort |        :x:         |
-|             present             |  none   | Burstable  |        :x:         |
-|        none _or_ =limits        | present | Guaranteed |        :x:         |
-| present, integer, _and_ =limits | present | Guaranteed | :white_check_mark: |
+-->
 
 ---
 
@@ -769,17 +792,19 @@ resources:
 
 ^ Kubenetes supports two deployment strategies, RollingUpdate and Recreate.
 
-^ The Recreate strategy destroys and Recreates the deployment. Its much faster than 
-a RollingUpdate, which makes it nice for development, but since the deployment is destroyed, can result in lower availability.
-
 ^ RollingUpdates, as the name suggests, rolls out your update slowly, replacing old pods with new ones.
 
-^ Using a RollingUpdate has a few additional options: maxUnavailable, maxSurge (int, percent)
-Default: 
+^ K8s defaults to a RollingUpdate with:
 * 25% max unavailable
 * 25% max surge
 
-^ Tuning these per application are really important for deployments. It effects rollout time and availability at the expense of resource consumption.
+^ This allows k8s to surge when resources are available, or removing some of your pods if resources arent
+
+^ The Recreate strategy destroys and Recreates the deployment. Its much faster than 
+a RollingUpdate, which makes it nice for development, but since the deployment is destroyed, can result in lower availability.
+
+^ Tuning these per application are really important for deployments. 
+It effects rollout time and availability at the expense of resource consumption.
 
 ```yaml
 apiVersion: apps/v1
@@ -810,7 +835,7 @@ spec:
 
 # Health Checks
 
-^ there are two types of healthchecks, readiness, and liveness.
+^ Types: readiness and liveness.
 
 ^ readiness probes let kubernetes know your application is ready to serve traffic
 
@@ -835,7 +860,9 @@ livenessProbe:
     port: 4000
 ```
 
+<!--
 ---
+
 
 # Pod lifecycle
 
@@ -855,15 +882,16 @@ containers:
           command: 
             - bin/better_together
             - rpc
-            - BetterTogether.notify_node_down()
+            - BetterTogether.ayyy_bros_ima_dip_out()
 ```
+-->
 
+<!--
 ---
 
 # Pod Termination
 
 [.code-highlight: 2]
-[.code-highlight: 6]
 
 ^ Kuberntes will send a SIGTERM to your pods when they are being evicted. 
 By default k8s will wait 30 seconds before sending a SIGKILL.
@@ -871,9 +899,7 @@ By default k8s will wait 30 seconds before sending a SIGKILL.
 ^ `terminationGracePeriodSeconds` can be set to tune the time in between events. 
 This can be used to tune your application to give it proper time to shutdown cleanly
 
-^ Note: terminationGracePeriodSeconds is set for the pod, not a container
-
-^ The `terminationMessagePath` can be set for each container. 
+^ Note: terminationGracePeriodSeconds is set for the pod, not a container, pods are a choesive unit.
 
 ```yaml
 spec:
@@ -881,32 +907,13 @@ spec:
   containers:
     - name: better-together
       image: quay.io/coryodaniel/better_together:latest
-      terminationMessagePath: "/app/erl_crash.dump"
 ```
-
----
-
-```yaml
-apiVersion: v1
-kind: Pod
-...
-    lastState:
-      terminated:
-        containerID: ...
-        exitCode: 1337
-        finishedAt: ...
-        message: |
-          YOUR_CRASH_DUMP_HERE
-        ...
-```
-
-^ Kubernetes will record the termination message in the pods status, which makes it easily accessible from a dashboard or monitoring application.
-
-^ This can be used to ship an erl_crash.dump out of a pod that is crashing.
+-->
 
 ---
 
 # Affinity
+[.build-lists: true]
 
 ^ Affinity is a really interesting feature of kuberntes.
 
@@ -916,13 +923,62 @@ kind: Pod
 
 ^ AntiAffinity let you tell kuberntes that you don't want to be on a node or near a certain pod.
 
-@HERE
+^ Inter pod affinities are resource intensive, not recommended for clusters over 
 
-* Node
-* Pod
-* Affinity
-* AntiAffinity
+* Node Affinity
+* Node Anti-Affinity
+* Pod Affinity
+* Pod Anti-Affinity
 
+---
+
+# `podAntiAffinity`
+
+[.code-highlight: all]
+[.code-highlight: 11-21]
+[.code-highlight: 13-14]
+
+^ My better-together app keeps state in memory, so I'd like to keep it off the same k8s nodes in event of node failure.
+
+^ Here I am saying that I want all apps that have the 'app' label with the value 'better-together' to _Not_ be on the same node.
+
+^ topologyKey is the way to identify the node class. This can be by name, zone, and a number of other options.
+
+^ You can use this same functionality to make sure all your pods are in different zones in a regional cluster
+
+^ I do want to point out preferred vs required
+
+^ In this case, my genserver memory is a nice to have, so id prefer it not on the same node, but I'm not requiring it.
+
+^ requiring can cause a pod not to get scheduled, so be careful when using it unless you _really_ need the pods not to be on the same node.
+
+^ affinities and antiaffinities can be used together to do things like place all of your app's pods on differnet nodes, but make them scheduled on the same pods as a dependency like redis or postgres
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest    
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          # requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - better-together
+            topologyKey: "kubernetes.io/hostname"     
+```
+
+<!--
 ---
 
 # [fit] QUIRK
@@ -930,33 +986,16 @@ kind: Pod
 
 ---
 
-QUIRKS, fuck @here.
-^ All that stuff is fine-and-dandy, but Kubernetes, Docker, and BEAM's schedulers and SMP do have some interesting quirks.
+# CPU/Scheduler Quirks
 
 * Busy Wait
-* Scheduler count vs. resource requests
-* Concurrency, erlang is great at it, 
+* Scheduler count vs. resource requests (logical cpus vs cgroup)
+* Concurrency, erlang is great at it, give it bigger pods, risk vs compute loss if a pod fails.
 
 > An application can only be as fast as its slowest sequential code (and this includes the erlang VMs sequential code)
 -- _Amdahl's Law_
 
-<!--
-* busywait, schedulers
-  * https://elixirforum.com/t/performance-of-erlang-elixir-in-docker-kubernetes/21493/16
-* Show CPU count, vs resource req/lim, vs schedulers
-* bigger CPUs for erlang, becaause of erlang excels at managing system resources
-
-- Weird 💩
-  - Everything has quirks
-    - vCPUs, cgroups, and schedulers
-    - Busy wait issues
-    - Pod CPU requests and being a good neighbor
-    - CPU Affinity workloads - Where are we? BEAM VM in a container in a VM 
 -->
-
----
-
-# PriorityClass
 
 ---
 
@@ -965,6 +1004,10 @@ QUIRKS, fuck @here.
 * Service discover, DNS
 * Distributing processes
 * *talk* about process handoff w/ swarm
+
+---
+
+# PriorityClass
 
 ---
 
@@ -984,8 +1027,12 @@ securityContext, PodSecurityPolicy, Distroless
 
 # Takeaways
 
+
+
 Where can we go from here?
 
 kOTP
 
-# Thanks
+---
+
+# Bon Voyage

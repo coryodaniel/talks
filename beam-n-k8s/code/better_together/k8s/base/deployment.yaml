@@ -15,13 +15,14 @@ spec:
       containers:
         - name: better-together
           image: quay.io/coryodaniel/better_together:latest
-          terminationMessagePath: "/app/erl_crash.dump"
           ports:
             - containerPort: 4000
               name: web
           env:
             - name: PORT
               value: "4000"
+            - name: FOO
+              value: derp
           resources:
             limits:
               cpu: 500m

@@ -10,6 +10,3 @@ deps
 
 # don't include our release builds
 releases
-
-# Generate on crash by the VM
-erl_crash.dump
