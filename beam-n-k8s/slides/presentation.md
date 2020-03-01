@@ -1,4 +1,6 @@
 theme: work, 3
+quote: #f1be52, Helvetica
+quote-author: #fff, "Work Sans"
 
 <!-- # [fit] BEAM and Kubernetes: 
 # [fit] Better Together? -->
@@ -700,6 +702,7 @@ spec:
 ```yaml
 # Burstable
 resources:
+  # limits are optional for Burstable class
   limits:
     cpu: 500m
     memory: 200Mi
@@ -711,7 +714,9 @@ resources:
 
 # Pod Resources & QoS
 
-^ `Guaranteed` QoS is only achieved by each container having resource requests/limits _and_ in each container, they limits/requests must be the same
+^ `Guaranteed` QoS is only achieved by each container having resource limits and either no requests set or, by setting requests to the same value. If not present, k8s will set requests = limits.
+
+^ If the cluster is configured with a static CPU management policy, containers can be granted exclusive rights to a CPU (cpu affinity). In this case, requests must be set as well, and cannot be fractional
 
 ^ This is really important, because if you are using helm charts, sidecars, or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS
 
@@ -723,10 +728,39 @@ resources:
   limits:
     cpu: 500m
     memory: 200Mi
-  requests:
-    cpu: 500m
-    memory: 200Mi   
 ```
+
+---
+
+![](./images/pod-qos.png)
+
+---
+
+# QoS Summary
+
+^ Scheduling
+
+^ Guaranteed will get scheduled if there are resources and no DiskPressure
+
+^ Burstable may get scheduled if there are resources and no DiskPressure, no _guarantee_, resources are burstable
+
+^ BestEffort may get scheduler if there are resources and no DiskPressure or MemoryPressure
+
+^ Eviction
+
+^ BestEffort and Burstable over resource requests, based on priority and resource consumption
+
+^ Guaranteed and Burstable and never evicted when below resource requests for another pod
+
+^ DiskPressure causes BestEffort -> Burstable -> Guaranteed eviction
+
+|            Requests             | Limits  | Class      |    CPU Affinity    |
+| :-----------------------------: | :-----: | :--------- | :----------------: |
+|              none               |  none   | BestEffort |        :x:         |
+|             present             |  none   | Burstable  |        :x:         |
+|        none _or_ =limits        | present | Guaranteed |        :x:         |
+| present, integer, _and_ =limits | present | Guaranteed | :white_check_mark: |
+
 ---
 
 # Deployment Strategy

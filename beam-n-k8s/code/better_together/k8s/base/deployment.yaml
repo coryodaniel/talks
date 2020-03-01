@@ -23,11 +23,8 @@ spec:
             - name: PORT
               value: "4000"
           resources:
-            # limits:
-            #   cpu: 500m
-            #   memory: 200Mi
-            requests:
-              cpu: 250m
+            limits:
+              cpu: 500m
               memory: 200Mi
           readinessProbe:
             initialDelaySeconds: 5
