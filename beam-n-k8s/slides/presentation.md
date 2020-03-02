@@ -485,9 +485,9 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 > -- me
 
 ^ As Kubernetes gets more and more features I feel like it's declarativeness has slipped away, 
-and we have a lot more places where we _tell_ kubernetes _how_ to run our workloads.
+and we have a lot more places where we _tell_ kubernetes the details of _how_ to run our workloads.
 
-^ This feels leaky, as its creating additional cognitive overload to already complicated applications.
+^ This feels leaky. Its creating additional cognitive operational overload to already complicated applications.
 
 ---
 
@@ -580,9 +580,9 @@ spec:
 # <br />
 # [fit] `git push`
 
-^ A developers "declarative interface" `git push`
+^ This is a declarative interface for deploying applications.
 
-^ Put good CI/CD in place.
+^ I want my application to run, go do it computer.
 
 ---
 
@@ -644,11 +644,11 @@ spec:
 # [fit] ALERT
 
 ---
+[.code-highlight: all]
+[.code-highlight: 6,11]
+
 
 # Deployments
-[.code-highlight: all]
-[.code-highlight: 6]
-[.code-highlight: 11]
 
 ^ So, if you've seen a Kubernet (singular form of k8s) before, you've definitely worked with Deployments. 
 
@@ -656,7 +656,7 @@ spec:
 
 ^ Most of the YAML here will be truncated, to focus on the topics
 
-^ CODE_TRANSITION: It deploys 3 instances of an application CODE_TRANSITION `better_together`, a prime calculator.
+^ CODE_TRANSITION: It deploys 3 instances of an application `better_together`, a prime calculator.
 
 ^ Before we get into some of the more interesting kubernetes resources, 
 I wanted to talk about a few attributes of Deployments that can make your applications more resilient.
@@ -676,16 +676,44 @@ spec:
 ```
 
 ---
+[.code-highlight: 12]
 
-# Pod Resources & QoS
+# Pod Resources & QoS: BestEffort
 
-^ Requests will provide you with a CPU and memory baseline
+^ Resource requests will provide you with a CPU and memory baseline
 
-^ Limits help Kubernetes cap CPU utilization and OOM runaway RAM consumption.
+^ Resource limits help Kubernetes cap CPU utilization and OOM runaway RAM consumption.
 
 ^ More importantly, what you put here determines your applications quality of service with regards to scheduling and evicting pods
 
-^ No `resources` settings results in a BestEffort quality of service. This is the shrug emoji of availability
+^ No `resources` settings results in a BestEffort quality of service. BestEffort is the shrug emoji of availability.
+
+```yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+          resources: {}
+```
+
+---
+
+[.code-highlight: 12-18]
+
+# Pod Resources & QoS: Burstable
+
+
+^ Setting a memory or CPU request in at least one container lands you in `Burstable`. 
+
+^ Kubernetes will give you the resource you requested, and allow your app to burst above when available.
 
 ```yaml
 apiVersion: apps/v1
@@ -699,38 +727,18 @@ spec:
       containers:
         - name: better-together
           image: quay.io/coryodaniel/better_together:latest
-          # BestEffort :shrug-fest:          
-          # resources:
-          #   limits:
-          #     cpu: 500m
-          #     memory: 200Mi
-          #   requests:
-          #     cpu: 250m
-          #     memory: 200Mi          
-```
-
----
-
-# Pod Resources & QoS
-
-^ Setting a memory or CPU request in at least one container lands you in `Burstable`. 
-
-^ Kubernetes will give you the resource you requested, and allow your app to burst above when available.
-
-```yaml
-# Burstable
-resources:
-  # limits are optional for Burstable class
-  limits:
-    cpu: 500m
-    memory: 200Mi
-  requests:
-    cpu: 250m
-    memory: 200Mi   
+          resources:
+            limits:
+              cpu: 500m
+              memory: 200Mi
+            requests:
+              cpu: 250m
+              memory: 200Mi   
 ```
 ---
+[.code-highlight: 12-15]
 
-# Pod Resources & QoS
+# Pod Resources & QoS: Guaranteed
 
 ^ `Guaranteed` QoS is only achieved by each container having resource limits and either no requests set or, 
 by setting requests to the same value. If not present, k8s will set requests = limits.
@@ -742,11 +750,21 @@ rights to a CPU (cpu affinity). In this case, requests must be set as well, and 
 or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS.
 
 ```yaml
-# Guaranteed
-resources:
-  limits:
-    cpu: 500m
-    memory: 200Mi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+          resources:
+            limits:
+              cpu: 500m
+              memory: 200Mi
 ```
 
 [.footer: "LimitRange can be used to apply resource requests and limits to all pods in a Namespace"]
@@ -812,34 +830,55 @@ kind: Deployment
 metadata:
   name: better-together
 spec:
-  replicas: 3
+  replicas: 4
   strategy:
     type: RollingUpdate # or Recreate
     rollingUpdate:
       maxUnavailable: 0
-      maxSurge: 25%
+      maxSurge: 50%
 ```
+
+---
+
+^ Here we can see I have four pods running.
+
+![](./images/rollout-1.png)
+
+---
+
+^ And when I deploy, kubernetes will burst 50% of a new replica set.
+^ The red box is the old replicaset ID, and the green box is the new replicaset ID
+
+^ Now, since I have 0 as my maxUnavailable, this means two things.
+1. My application should continue to be able to serve as much traffic since I'm not losing a pod
+2. _BUT_ if the cluster is low on resources, my bursted pods might not be able to be scheduled, so its important to keep that in mind when tuning maxSurge, maxUnavailable
+
+![](./images/rollout-2.png)
 
 ---
 
 # Health Checks
 
-^ Without defining healthchecks, Kubernetes can only make assumptions about your applications health based on resource consumption
+^ Without defining health checks, Kubernetes can only make assumptions about your applications health based on resource consumption
 
-> A pod without healthchecks is the Math Lady of Kubernetes
+> A pod without health checks is the Math Lady of Kubernetes
 -- Nick Young
 
 ![inline](./images/math-lady-meme.jpg)
 
 ---
 
+[.code-highlight: 1-6]
+[.code-highlight: 7-12]
+[.code-highlight: 4-6,10-12]
+
 # Health Checks
 
 ^ Types: readiness and liveness.
 
-^ readiness probes let kubernetes know your application is ready to serve traffic
+^ CODE_TRANSITION readiness probes let kubernetes know your application is ready to serve traffic
 
-^ liveness probes let kubernetes know your app is ... alive
+^ CODE_TRANSITION liveness probes let kubernetes know your app is ... alive
 
 ^ without these, kubernetes may send traffic early or assesses liveliness based on resource settings
 
@@ -855,14 +894,13 @@ readinessProbe:
 livenessProbe:
   initialDelaySeconds: 5
   periodSeconds: 60
-  httpGet:
-    path: /health
-    port: 4000
+  exec:
+    command:
+      - mix myapp.how_you_doing_fam
 ```
 
 <!--
 ---
-
 
 # Pod lifecycle
 
@@ -884,9 +922,7 @@ containers:
             - rpc
             - BetterTogether.ayyy_bros_ima_dip_out()
 ```
--->
 
-<!--
 ---
 
 # Pod Termination
@@ -923,8 +959,6 @@ spec:
 
 ^ AntiAffinity let you tell kuberntes that you don't want to be on a node or near a certain pod.
 
-^ Inter pod affinities are resource intensive, not recommended for clusters over 
-
 * Node Affinity
 * Node Anti-Affinity
 * Pod Affinity
@@ -936,23 +970,22 @@ spec:
 
 [.code-highlight: all]
 [.code-highlight: 11-21]
+[.code-highlight: 16-20]
+[.code-highlight: 21-23]
 [.code-highlight: 13-14]
 
-^ My better-together app keeps state in memory, so I'd like to keep it off the same k8s nodes in event of node failure.
 
-^ Here I am saying that I want all apps that have the 'app' label with the value 'better-together' to _Not_ be on the same node.
+^ My app keeps some process state in memory, and I'd like to keep too much state off the same k8s nodes in event of failure.
 
-^ topologyKey is the way to identify the node class. This can be by name, zone, and a number of other options.
+^ [CODETRANS] I can use podAntiAffinity to tell kubernetes [CODETRANS] not to place two of my pods on the same node.
 
-^ You can use this same functionality to make sure all your pods are in different zones in a regional cluster
+^ [CODETRANS] topologyKey is a way to identify a topology. Here I am basing my antiaffinity off of the node name, but it can be based on zone or region as well.
 
-^ I do want to point out preferred vs required
+^ [CODETRANS] I do want to point out preferred vs required
 
 ^ In this case, my genserver memory is a nice to have, so id prefer it not on the same node, but I'm not requiring it.
 
-^ requiring can cause a pod not to get scheduled, so be careful when using it unless you _really_ need the pods not to be on the same node.
-
-^ affinities and antiaffinities can be used together to do things like place all of your app's pods on differnet nodes, but make them scheduled on the same pods as a dependency like redis or postgres
+^ Affinities a very useful and powerful feature. It doest have some caveats, so read up on affinities if you are rolling them out on large clusters.
 
 ```yaml
 apiVersion: apps/v1
@@ -976,7 +1009,13 @@ spec:
                 values:
                 - better-together
             topologyKey: "kubernetes.io/hostname"     
+            # topoloyKey: failure-domain.beta.kubernetes.io/zone
+            # topologyKey: failure-domain.beta.kubernetes.io/region            
 ```
+
+---
+
+# [fit] Horizontal / Vertical Pod Autoscalers
 
 <!--
 ---
@@ -992,47 +1031,290 @@ spec:
 * Scheduler count vs. resource requests (logical cpus vs cgroup)
 * Concurrency, erlang is great at it, give it bigger pods, risk vs compute loss if a pod fails.
 
-> An application can only be as fast as its slowest sequential code (and this includes the erlang VMs sequential code)
--- _Amdahl's Law_
-
 -->
 
 ---
 
-# [fit] Service Discovery
+# **Service**
+# **Discovery**
 
-* Service discover, DNS
-* Distributing processes
-* *talk* about process handoff w/ swarm
+![](./images/found-ya.jpg)
+
+## <br />
+## <br />
+
+^ Kubernetes has built in service discovery and a local DNS service with records for all defined Services
+
+---
+[.code-highlight: all]
+[.code-highlight: 5-6, 8-9]
+
+```yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: better-together-epmd
+  namespace: prod
+spec:
+  selector:
+    app: better-together
+  clusterIP: None
+```
+
+^ All pods with the label `app` `better-together` will receive traffic via the same DNS name
 
 ---
 
+[.text: alignment(center)]
+
+[.code-highlight: 1]
+[.code-highlight: 2]
+
+^ The format is svc name, namespace "svc.cluster.local", so my epmd service would be: 
+
+# <br />
+# <br />
+# <br />
+
+```yaml
+SVC_NAME.NAMESPACE.svc.cluster.local
+better-together-epmd.prod.svc.cluster.local
+```
+
+---
+[.code-highlight: all]
+[.code-highlight: 6-7]
+
+# Service Discovery + libcluster
+
+^ [CODE_TRANS] Using libcluster, it becomes trivial to join nodes together.
+
+^ Using a long termination grace period and a rollout strategy, its even possible to pass off process state between pods.
+
+^ Its not quite hot code loading, but it can be pretty useful for avoiding state loss.
+
+```elixir
+config :libcluster,
+  topologies: [
+    k8s: [
+      strategy: Cluster.Strategy.Kubernetes.DNS,
+      config: [
+        service: "better-together-epmd",
+        application_name: "better_together",
+        polling_interval: 10_000
+      ]
+    ]
+  ]
+```
+
+---
+
+![](./images/libcluster.png)
+
+^ And in this screen shot you can see pods from my new deployment joining my old deployments cluster.
+
+^ Service selector labels can be used to enable/disable this functionality.
+
+---
+
+# **PriorityClass**
+
+![](./images/priorityclass.jpg)
+
+^ PriorityClass is very important in clusters with many workloads
+
+^ Its the rich and famous people in the life rafts first of Kubernetes.
+
+^ Earlier we talked about QoS. QoS and PriorityClass are two sides of the same coin.
+
+^ PriorityClasses are used by kubernetes to determine if lower priority pods should be evicted, to make room
+for incoming, high priority pods
+
+^ pods waiting to be scheduled are orderd by the priority class, highest to lowest
+
+---
 # PriorityClass
 
+^ A great example of this would be a high priority Checkout service in an ecommerce application. 
+We may want to tolerate the loss of search or a highres image service to make sure checkout has the resources to run.
+
+^ If there are contention for resources, we want to make sure that checkout service pods are able to be scheduled, so
+we set the priority higher.
+
+^ 1 billion max
+
+^ globalDefault is the default PriorityClass for any pod w/o a priority class
+
+```yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: checkout-service
+value: 1000000
+globalDefault: false
+description: "This priority class should be used by checkout service pods only."
+```
+
+---
+# PriorityClass
+
+[.code-highlight: 8]
+
+^ And then we can assign it to our pods or deployment by setting the priorityClassName
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-app
+spec:
+  template:
+    spec:
+      priorityClassName: checkout-service
+      containers:
+        - name: ecommerce-app
+          image: quay.io/coryodaniel/ecommerce-app:latest
+```
+
 ---
 
-# [fit] Horizontal / Vertical Pod Autoscalers
+# **PodDisruptionBudget**
+
+![](./images/whoops.jpeg)
+
+^ Pod disruption budgets are a way to set your applications tolerance for _concurrent_ disruptions.
+
+^ If you are running a stateful workload that requires a quorom like etcd, zookeeper, 
+or an erlang/elixir app using Swarm, PDBs can be used to configured a minimum quorom that must be available
+
+^ They are also useful for the ecommerce example from PriorityClass
+If we constantly disrupt our front-end application to keep checkout online, we might never get a customer into
+the checkout flow. PDBs could be used to set a minAvailable of our front end.
 
 ---
 
 # PodDisruptionBudget
 
+```yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: front-end
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: front-end
+```
+
+---
+[.build-lists: true]
+
+# Bonus **Security**
+
+^ Fault tolerance, resiliancy, and reliability are nothing if you get POWNED
+
+![](./images/security.jpg)
+
+* PodSecurityPolicy
+* pod.spec.securityContext
+* pod.spec.containers.securityContext
+
+^ [TRANS] K8s has one Resource kind and two attributes for controlling security
+
+^ PSP lets you assign a security policy to all pods using RBAC
+
 ---
 
-# **Bonus** Security
+# securityContext
 
-securityContext, PodSecurityPolicy, Distroless
+[.code-highlight: 11-15]
+
+^ securityContext lets you set security attributes at a pod or container level
+
+^ Some low hanging fruit
+* Disable running as root, makes you the most popular person in the org
+* Disable privilege escalation
+* Set read-only filesystem
+* Force pods to run as an unprivileged user
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: better-together
+spec:
+  template:
+    spec:
+      containers:
+        - name: better-together
+          image: quay.io/coryodaniel/better_together:latest
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 65534
+```
+
+---
+
+[.build-lists: true]
+
+# Security Tools
+
+* [Distroless](https://github.com/GoogleContainerTools/distroless)
+* [kubeaudit](https://github.com/Shopify/kubeaudit)
+* [kube-bench](https://github.com/aquasecurity/kube-bench)
+* [kube-hunter](https://github.com/aquasecurity/kube-hunter)
+
+^ Distroless: Docker images contain only your application and its runtime dependencies - no shell, package managers, or anything else.
+
+^ kube-audit: Usage and security best practices
+
+^ kube-bench: Center for Internet Security Kubernetes Sec Benchmarker
+
+^ kube-hunter: vuln scanner and knowledge base
+
+^ Stick those security scanners in your IaC CI/CD pipeline and send alerts when sec scans fail.
 
 ---
 
 # Takeaways
 
+1. Boats are friggin dangerous.
+2. Kubernetes is complex, but learned complexity is a feature. Make sure you have the resources to know what you are operating.
+3. Simple, extendable API
+4. learned complexity for ops
+5. ci/cd for developers
 
-
-Where can we go from here?
-
-kOTP
+^ k8s and beam are absolutely better together, k8s provides a lot of different availability features that erlang does not, but
+your ogranization and team needs to be ready to dedicate resources to managing and operating kubenetes
 
 ---
 
-# Bon Voyage
+# **Where Can We Go From Here?**
+
+![](./images/kotp.jpeg)
+
+---
+
+[.build-lists: true]
+
+# You down with **kOTP**?
+
+^ I would love to see a set of tools to bring kubernetes and the beam closer together
+
+* Persist erl_crash.dump
+* Connect SASL Alerts to AlertManager
+* Auto-tune busywait
+* Autoscaling schedulers to match CPU resource requests/limits
+* An official Distroless for the BEAM
+
+---
+
+[.text: alignment(center)]
+
+# [fit] **Bon Voyage**
+
+![](./images/bonny-banner.png)
