@@ -752,9 +752,6 @@ spec:
 
 ^ `Guaranteed` QoS is only achieved when all containers have resource limits set, 
 
-^ If the cluster is configured with a static CPU management policy, containers can be granted exclusive 
-rights to a CPU (cpu affinity). In this case, requests must be set as well, and cannot be fractional
-
 ^ This is really important, because if you are using sidecars, 
 or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS.
 
@@ -785,6 +782,8 @@ spec:
 ---
 
 # QoS Summary
+
+^ Discuss table
 
 ^ Quirk Alert: Scheduler / CPU - cgroups. OTP 23 is container aware and should address this.
 
@@ -826,7 +825,7 @@ spec:
 ^ RollingUpdates, as the name suggests, rolls out your update slowly, replacing old pods with new ones.
 
 ^ K8s defaults to a RollingUpdate with:
-* 25% max unavailable
+* 25% max unavailable - lower's capacity
 * 25% max surge
 
 ^ This allows k8s to surge when resources are available, or removing some of your pods if resources arent
@@ -836,6 +835,8 @@ a RollingUpdate, which makes it nice for development, but since the deployment i
 
 ^ Tuning these per application are really important for deployments. 
 It effects rollout time and availability at the expense of resource consumption.
+
+^ Looking at this YAML, you can see I have 4 replicas and a 50% surge.
 
 ```yaml
 apiVersion: apps/v1
@@ -889,13 +890,13 @@ spec:
 
 ^ Types: readiness and liveness.
 
-^ CODE_TRANSITION readiness probes let kubernetes know your application is ready to serve traffic
+^ readiness probes let kubernetes know your application is ready to serve traffic
 
 ^ CODE_TRANSITION liveness probes let kubernetes know your app is ... alive
 
 ^ without these, kubernetes may send traffic early or assesses liveliness based on resource settings
 
-^ httpGet, TCP, and shell execs, which allows you to call mix tasks or release commands
+^ CODE_TRANSITION Types of checks: httpGet, TCP, and shell execs
 
 ```yaml
 readinessProbe:
@@ -964,18 +965,13 @@ spec:
 # Affinity
 [.build-lists: true]
 
-^ Affinity is a really interesting feature of kuberntes.
+^ Affinity is a really interesting feature of kubernetes.
 
-^ Its actually a few different features, Kubernetes supports: affinity and anti-affinity at the node and pod level.
+^ A few facets to affinity: [TRANSITION_THROUGH EACH] Affinity, AntiAffinity, Pod, Node, Preferred
 
-^ Affinity lets you tell kubernetes to schedule your workloads on certain nodes or as neighbors to certain pods
-
-^ AntiAffinity let you tell kubernetes that you don't want to be on a node or near a certain pod.
-
-* Node Affinity
-* Node Anti-Affinity
-* Pod Affinity
-* Pod Anti-Affinity
+* Affinity of AntiAffinity
+* Pod or Node
+* Preferred or Required
 
 ---
 
@@ -987,18 +983,14 @@ spec:
 [.code-highlight: 21-23]
 [.code-highlight: 13-14]
 
-
-^ My app keeps some process state in memory, and I'd like to keep too much state off the same k8s nodes in event of failure.
-
-^ [CODETRANS] I can use podAntiAffinity to tell kubernetes [CODETRANS] not to place two of my pods on the same node.
-
-^ [CODETRANS] topologyKey is a way to identify a topology. Here I am basing my antiaffinity off of the node name, but it can be based on zone or region as well.
-
-^ [CODETRANS] I do want to point out preferred vs required
-
-^ In this case, my genserver memory is a nice to have, so id prefer it not on the same node, but I'm not requiring it.
-
-^ Affinities a very useful and powerful feature. It doest have some caveats, so read up on affinities if you are rolling them out on large clusters.
+^ Pod anti-affinity is particularly interesting:
+* [Example] App w/ in-memory process state example
+* [CODETRANS] I can use podAntiAffinity to tell kubernetes 
+* [CODETRANS] not to place two of my pods on the same node.
+* [CODETRANS] topologyKey is a way to identify a topology. Here I am basing my antiaffinity off of the node name, but it can be based on zone or region as well.
+* [CODETRANS] I do want to point out preferred vs required
+* In this case, my genserver memory is a nice to have, so id prefer it not on the same node, but I'm not requiring it.
+* Useful/Powerful feature, API perf costs on large clusters
 
 ```yaml
 apiVersion: apps/v1
@@ -1033,6 +1025,12 @@ spec:
 # [fit] Vertical 
 # [fit] **Autoscalers**
 ![](./images/up-ship-creek.jpg)
+
+^ First Resources we are looking at this isn't a part of a deployment
+
+^ Two types: 
+* horizontal - adds pods
+* vertical - adds resources
 
 ---
 
@@ -1109,9 +1107,10 @@ spec:
 [.code-highlight: 10-19]
 # HPA: External Metrics
 
-^ Or I can scale the number of pods running broadway if I see a lot of Kafka lag.
+^ Scale the number of pods off custom metrics
+Lets say I had a broadway consumer and I wanted to start more pods when Kafka consumer group lag is high
 
-^ I want to point out the version here as well, 
+^ [TRANSITION] I want to point out the version here as well, 
 this is a newer version of HPA. Fast rate of change, k8s API version, and resource versions. 
 This as a leaky abstraction can be painful
 
@@ -1145,7 +1144,7 @@ spec:
 
 ^ Two Modes: Off and Auto
 
-^ Off will post `recommendations` to your vpa for your review
+^ Get your feet wet w/ "Off" - will post `recommendations` to your VPA for your review
 
 ^ Auto will automatically set your resources. It will restart your pod on change, use PDBs to maintain availability
 
@@ -1169,8 +1168,9 @@ spec:
 
 # VPA: recommendations
 
-^ This is an example recommendation. If VPA had modified resources, 
-it will put an annotation on your pod with a description of the changes.
+^ Here is an example recommendation. You would see this under the status of your VPA.
+
+^ If VPA had modified resources, it will put an annotation on your pod with a description of the changes.
 
 ```yaml
 recommendation:
@@ -1355,12 +1355,14 @@ spec:
 
 ^ Pod disruption budgets are a way to set your applications tolerance for _concurrent_ disruptions.
 
-^ If you are running a stateful workload that requires a quorom like etcd, zookeeper, 
-or an erlang/elixir app using Swarm, PDBs can be used to configured a minimum quorom that must be available
+^ Lets say we had a regional cluster and a zone went down and we lost 33% of our nodes.
 
 ^ They are also useful for the ecommerce example from PriorityClass
 If we constantly disrupt our front-end application to keep checkout online, we might never get a customer into
 the checkout flow. PDBs could be used to set a minAvailable of our front end.
+
+^ If you are running a stateful workload that requires a quorom like etcd, zookeeper, 
+or an erlang/elixir app using Swarm, PDBs can be used to configured a minimum quorom that must be available
 
 ---
 
