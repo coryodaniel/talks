@@ -51,7 +51,7 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ^ So, what you're here for, right?
 
-^ I surveyed attendees and it seemed like a good mix of people with and without kubernetes experience,
+^ I did a very sciencetific survey attendees (a twitter poll) and it seemed like a good mix of people with and without kubernetes experience,
 so today I want to talk about my approach to deciding on Kubernetes, and then some advanced topics
 for getting better availability out of our BEAM applications.
 
