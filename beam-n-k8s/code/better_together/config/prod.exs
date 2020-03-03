@@ -16,7 +16,7 @@ config :libcluster,
       config: [
         service: "better-together-headless",
         application_name: "better_together",
-        polling_interval: 1000
+        polling_interval: 10_000
       ]
     ]
   ]

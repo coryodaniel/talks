@@ -1015,7 +1015,160 @@ spec:
 
 ---
 
-# [fit] Horizontal / Vertical Pod Autoscalers
+# [fit] Horizontal 
+# [fit] and 
+# [fit] Vertical 
+# [fit] **Autoscalers**
+![](./images/up-ship-creek.jpg)
+
+---
+
+# HPA: Pod CPU
+
+[.code-highlight: 11-19]
+```yaml
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: better-together
+  namespace: prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: better-together
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+```
+
+^ HPAs will add additional pods based on resource consumption
+
+^ Supply multiple, each will be assessed in turn, the one highest calculated replica count will be used.
+
+^ CPU or RAM
+
+^ Sourced from three metrics APIS: metrics.k8s.io, custom.metrics.k8s.io, and external.metrics.k8s.io
+
+^ Custom Metrics!
+
+---
+[.code-highlight: 11-19]
+
+# HPA: Pod Custom Metrics
+
+^ Here I am scaling based on the packets-per-second of my pod
+
+^ Example values, could be anything depending on your custom metrics or external metrics provider.
+
+^ https://github.com/kubernetes/metrics/blob/master/IMPLEMENTATIONS.md
+
+```yaml
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: better-together
+  namespace: prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: better-together
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Pods
+    pods:
+      metric:
+        name: packets-per-second
+      target:
+        type: AverageValue
+        averageValue: 1k
+```
+
+---
+[.code-highlight: 10-19]
+# HPA: External Metrics
+
+^ Or I can scale the number of pods running broadway if I see a lot of Kafka lag.
+
+```yaml
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - external:
+      metricName: my.external.kafka|consumer_group|lag
+      metricSelector:
+        matchLabels:
+          resource.labels.topic: good-topic
+      targetAverageValue: "2000"
+    type: External
+```
+
+---
+
+# Vertical Pod Autoscalers
+
+^ VPAs will tune the resource requests and limits of your pods based on usage.
+
+^ Two Modes: Off and Auto
+
+^ Off will post `recommendations` to your vpa for your review
+
+^ Auto will automatically set your resources. It will restart your pod on change, use PDBs to maintain availability
+
+^ They can be enabled/disabled per container in your pod as well.
+
+```yaml
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: better-together
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind:       Deployment
+    name:       better-together
+  updatePolicy:
+    updateMode: "Off"
+```
+
+---
+
+# VPA: recommendations
+
+^ This is an example recommendation. If VPA had modified resources, 
+it will put an annotation on your pod with a description of the changes.
+
+```yaml
+recommendation:
+  containerRecommendations:
+  - containerName: my-container
+    lowerBound:
+      cpu: 536m
+      memory: 262144k
+    target:
+      cpu: 587m
+      memory: 262144k
+    upperBound:
+      cpu: 27854m
+      memory: "545693548"
+```
 
 <!--
 ---
@@ -1210,18 +1363,29 @@ spec:
 
 ---
 [.build-lists: true]
+[.text: alignment(center)]
 
-# Bonus **Security**
-
-^ Fault tolerance, resiliancy, and reliability are nothing if you get POWNED
+# [fit] Bonus Round:
+# <br />
+# <br />
+# <br />
+# <br />
+# [fit] **Security**
 
 ![](./images/security.jpg)
+
+---
+[.build-lists: true]
+
+# Bonus Round: **Security**
+
+^ Fault tolerance, resiliancy, and reliability are nothing if you get POWNED
 
 * PodSecurityPolicy
 * pod.spec.securityContext
 * pod.spec.containers.securityContext
 
-^ [TRANS] K8s has one Resource kind and two attributes for controlling security
+^ [TRANS] K8s has a few options for applying security constraints to your docker containers
 
 ^ PSP lets you assign a security policy to all pods using RBAC
 
@@ -1282,18 +1446,33 @@ spec:
 
 # Takeaways
 
+[.build-lists: true]
+
+^ 2. Make sure you have the resources to know what you are operating.
+
+^ 3. Simple, extendable API, everything we saw today was using the same tool, and the same REST API
+
+^ 3.2, if you are interested in extending kubernetes, Id suggest looking at Bonny. Bonny allows you to extend kubernetes by writing elixir.
+
+^ 4. The community has built hundreds of features and extensions to Kubernetes to operate complex systems and automate day-2 operations.
+
 1. Boats are friggin dangerous.
-2. Kubernetes is complex, but learned complexity is a feature. Make sure you have the resources to know what you are operating.
-3. Simple, extendable API
-4. learned complexity for ops
-5. ci/cd for developers
+2. Kubernetes is complex, but learned complexity is a feature. 
+3. Simple, extendable API.
+4. Community built, powerful features to make you go webscale.
 
-^ k8s and beam are absolutely better together, k8s provides a lot of different availability features that erlang does not, but
-your ogranization and team needs to be ready to dedicate resources to managing and operating kubenetes
+^ k8s and beam are absolutely better together, 
+k8s provides a lot of availability features that the BEAM and Erlang does not, but
+your ogranization and team needs to be ready to dedicate resources to managing 
+and operating kubenetes
 
+<!-- 
 ---
 
-# **Where Can We Go From Here?**
+# [fit] Where Can 
+# [fit] **We**
+# [fit] **Go** 
+# [fit] From Here?
 
 ![](./images/kotp.jpeg)
 
@@ -1301,7 +1480,9 @@ your ogranization and team needs to be ready to dedicate resources to managing a
 
 [.build-lists: true]
 
-# You down with **kOTP**?
+# [fit] You down with **kOTP**?
+
+![](./images/kotp.jpeg)
 
 ^ I would love to see a set of tools to bring kubernetes and the beam closer together
 
@@ -1310,6 +1491,7 @@ your ogranization and team needs to be ready to dedicate resources to managing a
 * Auto-tune busywait
 * Autoscaling schedulers to match CPU resource requests/limits
 * An official Distroless for the BEAM
+-->
 
 ---
 

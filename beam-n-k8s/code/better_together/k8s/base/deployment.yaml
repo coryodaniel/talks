@@ -3,15 +3,15 @@ kind: Deployment
 metadata:
   name: better-together
 spec:
-  replicas: 3
+  replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 0
-      maxSurge: 1
+      maxSurge: 50%
   template:
     spec:
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 120
       containers:
         - name: better-together
           image: quay.io/coryodaniel/better_together:latest
@@ -21,11 +21,9 @@ spec:
           env:
             - name: PORT
               value: "4000"
-            - name: FOO
-              value: derp
           resources:
-            limits:
-              cpu: 500m
+            requests:
+              cpu: 250m
               memory: 200Mi
           readinessProbe:
             initialDelaySeconds: 5
