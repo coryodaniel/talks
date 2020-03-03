@@ -51,7 +51,7 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ^ So, what you're here for, right?
 
-^ I did a very sciencetific survey attendees (a twitter poll) and it seemed like a good mix of people with and without kubernetes experience,
+^ I did a very scientific survey attendees (a twitter poll) and it seemed like a good mix of people with and without kubernetes experience,
 so today I want to talk about my approach to deciding on Kubernetes, and then some advanced topics
 for getting better availability out of our BEAM applications.
 
@@ -720,6 +720,11 @@ spec:
 
 ^ Kubernetes will give you the resource you requested, and allow your app to burst above when available.
 
+^ Setting limits are particularly important with the BEAM since it is so 
+good at resource utilization. Without limits, a pod could consume a majority of the node's CPU/RAM.
+
+^ Can be tough on neighbor applications
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -745,8 +750,7 @@ spec:
 
 # Pod Resources & QoS: Guaranteed
 
-^ `Guaranteed` QoS is only achieved by each container having resource limits and either no requests set or, 
-by setting requests to the same value. If not present, k8s will set requests = limits.
+^ `Guaranteed` QoS is only achieved when all containers have resource limits set, 
 
 ^ If the cluster is configured with a static CPU management policy, containers can be granted exclusive 
 rights to a CPU (cpu affinity). In this case, requests must be set as well, and cannot be fractional
