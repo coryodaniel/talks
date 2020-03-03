@@ -20,3 +20,4 @@ Start N(?) prime calculators
 ### Amdahl's Law
 
 What are the maximum CPU requests/limits that can be given to a BEAM application before additional CPUs give diminisioning returns?
+This is addressed in OTP 23

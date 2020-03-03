@@ -596,9 +596,9 @@ spec:
 
 ---
 
-^ We aren't going to hit all of these, unless y'all wanna skip lunch? No?
+^ We aren't going to hit all of these, but if you are interested, there is a NodePool party on the rooftop at 6pm
 
-^ Ok, fine. There is a nodepool party on the roof at 5PM, meet me up there and we can go through the rest.
+^ Meet me up there and we can go through the rest.
 
 | Feature                                   | Kubernetes                                            |              Beam or Erlang/OTP              |   Can k8s Help?    |
 | ----------------------------------------- | :---------------------------------------------------- | :------------------------------------------: | :----------------: |
@@ -782,6 +782,10 @@ spec:
 
 # QoS Summary
 
+^ Quirk Alert: Scheduler / CPU - cgroups. OTP 23 is container aware and should address this.
+
+^ For now you may need to tune your schedulers using erl flags.
+
 |            Requests             | Limits  | Class      |    CPU Affinity    |
 | :-----------------------------: | :-----: | :--------- | :----------------: |
 |              none               |  none   | BestEffort |        :x:         |
@@ -962,7 +966,7 @@ spec:
 
 ^ Affinity lets you tell kubernetes to schedule your workloads on certain nodes or as neighbors to certain pods
 
-^ AntiAffinity let you tell kuberntes that you don't want to be on a node or near a certain pod.
+^ AntiAffinity let you tell kubernetes that you don't want to be on a node or near a certain pod.
 
 * Node Affinity
 * Node Anti-Affinity
@@ -1103,6 +1107,10 @@ spec:
 
 ^ Or I can scale the number of pods running broadway if I see a lot of Kafka lag.
 
+^ I want to point out the version here as well, 
+this is a newer version of HPA. Fast rate of change, k8s API version, and resource versions. 
+This as a leaky abstraction can be painful
+
 ```yaml
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -1186,7 +1194,7 @@ recommendation:
 # CPU/Scheduler Quirks
 
 * Busy Wait
-* Scheduler count vs. resource requests (logical cpus vs cgroup)
+* Scheduler count vs. resource requests (logical cpus vs cgroup) -> fixed in OTP 23; container aware
 * Concurrency, erlang is great at it, give it bigger pods, risk vs compute loss if a pod fails.
 
 -->
@@ -1339,7 +1347,7 @@ spec:
 
 # **PodDisruptionBudget**
 
-![](./images/sunken-treasure-ship.jpg)
+![original](./images/sunken-treasure-ship.jpg)
 
 ^ Pod disruption budgets are a way to set your applications tolerance for _concurrent_ disruptions.
 
@@ -1496,6 +1504,24 @@ and operating kubenetes
 * Auto-tune busywait
 * Autoscaling schedulers to match CPU resource requests/limits
 * An official Distroless for the BEAM
+
+---
+
+# Applications as Extensions
+
+* Use the operator pattern to abstract away the complexity of your app
+
+```yaml
+apiVersion: my-company.bonny.run/v1
+kind: CheckoutMicroservice
+metadata:
+  name: checkout
+spec:
+  env: prod
+  hostname: checkout.example.com
+  dockerTag: 1.2.3
+  logLevel: debug
+```
 -->
 
 ---
