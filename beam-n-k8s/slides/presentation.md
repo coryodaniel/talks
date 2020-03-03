@@ -640,8 +640,13 @@ spec:
 ^ There should be a pair of goggles under everyone's seat.
 
 # [fit] **WARNING!**
-# [fit] YAML 
-# [fit] ALERT
+![fit original](./images/yaml_af.png)
+# <br />
+# <br />
+# <br />
+# <br />
+# <br />
+# [fit] **ALERT**
 
 ---
 [.code-highlight: all]
@@ -1334,7 +1339,7 @@ spec:
 
 # **PodDisruptionBudget**
 
-![](./images/whoops.jpeg)
+![](./images/sunken-treasure-ship.jpg)
 
 ^ Pod disruption budgets are a way to set your applications tolerance for _concurrent_ disruptions.
 
