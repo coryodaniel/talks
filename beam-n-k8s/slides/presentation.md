@@ -2,24 +2,42 @@ theme: work, 3
 quote: #f1be52, Helvetica
 quote-author: #fff, "Work Sans"
 
-<!-- # [fit] BEAM and Kubernetes: 
+<!-- # [fit] BEAM and Kubernetes:
 # [fit] Better Together? -->
 
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # BEAM
+
 # and
+
 # Kubernetes:
+
 # [fit] Better Together?
 
 ![original](images/amorgos-greece.jpg)
 
-^ I'm here to guide you through the stormy seas of Kubernetes.
+^ Stormy Seas
+
+^ Thanks for coming out despite the plague.
+
+^ Appreciate the opportunity, hope everyone makes it home safe
+
+^ Clustering exercise...
+
+^ Zero trust, devsecops i like it
 
 ---
 
@@ -41,29 +59,27 @@ Pronounces kubectl: _kube cuddle_ or _kube cartel_ depending on my mood.
 
 ![fit](./images/yaml_af.png)
 
-^ Seriously, I love it. _BUT_ I fell down a staircase as a kid, so YMMV.
+^ This presentation is YAML AF
 
 ---
 
-# [fit] Are they 
+# [fit] Are they
+
 # [fit] **better**
+
 # [fit] together?
 
 ^ So, what you're here for, right?
 
-^ I did a very scientific survey attendees (a twitter poll) and it seemed like a good mix of people with and without kubernetes experience,
-so today I want to talk about my approach to deciding on Kubernetes, and then some advanced topics
-for getting better availability out of our BEAM applications.
+^ Scientific twitter poll, mix of k8s and not k8s
 
 ---
 
-^ Don't get hung up on these tables, we are coming back to them later
+^ Don't get hung up, its a lot of stuff, we'll come back to it.
 
-^ Kubernetes offers a lot of features that may really float your boat.
+^ float your boat
 
-^ These are just the marketing page features. 
-
-^ On the right are the related components of Kubernetes
+^ JUST marketing page features on the left
 
 | Features                                  | Kubernetes                                            |
 | ----------------------------------------- | :---------------------------------------------------- |
@@ -85,9 +101,9 @@ for getting better availability out of our BEAM applications.
 
 ---
 
-^ When we look at the features that the BEAM lacks here, we can see that Kubernetes can really put the wind in your sails.
+^ BEAM doesnt offer some of this stuff
 
-^ So the easy aanswer is of course: <consultant hat>, yes, they are better together
+^ Wind in your sails
 
 ^ but...
 
@@ -111,25 +127,23 @@ for getting better availability out of our BEAM applications.
 
 ---
 
-# [fit] Are they 
+# [fit] Are they
+
 # [fit] **better**
+
 # [fit] together?
 
-^ When asking this question, we've already made an assumption that we haven't vetted.
+^ Easy Answer, of course, so many more features
 
-^ Raise your hand if your company is using kubernetes, keep it up
+^ hands up, use k8s
+ABSTRATED via ci/cd, hands down
+Ops/SRE team, hands down
+hands still up DIRECTLY interface with k8s
+LIKE K8S, hands down
+I know your pain
 
-^ if your ops team abstracts away kubernetes via CI/CD, put your hand down
-
-^ Ok, now if you are on the ops or SRE team, put your hand down
-
-^ So everyone with their hand up is an application developer that interfaces with Kubernetes directly.
-
-^ Ok, put your hand down if you like Kubernetes
-
-^ So the people with your hands up, I feel your pain.
-
-^ By asking this question, we are making an assumption and there is a better question to start with
+^ Asking this question, we've made an assumption...
+Better question
 
 ---
 
@@ -145,8 +159,10 @@ for getting better availability out of our BEAM applications.
 
 ---
 
-# [fit] Your Startup's 
-# [fit] **MVP** 
+# [fit] Your Startup's
+
+# [fit] **MVP**
+
 # [fit] On Kubernetes:
 
 ![right fit](images/startup-mvp-on-k8s.jpeg)
@@ -155,19 +171,22 @@ for getting better availability out of our BEAM applications.
 
 ---
 
-# [fit] Your Startup's 
-# [fit] **MVP** 
+# [fit] Your Startup's
+
+# [fit] **MVP**
+
 # [fit] On Kubernetes:
 
 ![right](images/a-real-bitch.jpeg)
 
 ^ Before rolling k8s out in an organization, I ask a few questions:
 
-^ [Pause] Actually I ask a lot of questions, but these are the high notes
+^ [Pause] Actually a lot of questions, high notes
 
 ^ Do you have an Ops team?
 
-^ No, can your business sacrifice developer time to learn k8s? These are people that are hopefully building revenue generating features.
+^ No? Can your biz SACRIFICE developer time to learn k8s?
+These are people that are hopefully building revenue generating features.
 
 ^ Could you reliabily run on Heroku, Zeit, Fargate, or Gigalixer?
 
@@ -183,21 +202,21 @@ for getting better availability out of our BEAM applications.
 
 # Kubernetes Best Features
 
-^ The three best kubernetes features werent in those tables. 
+^ Best 3 features werent in that big table
 
-^ You wont find them on the marketing or landing pages.
+^ Not on landing page / marketing page
 
-^ And you probably won't find them in books.
+^ Wont find them in books
 
-* A simple, _extendable_ API and client
-* Learned Complexity
-* Community
+^ [TRANSITION] Kubernetes REST API and kubectl
 
-^ Kubernetes REST API, CRDs, and kubectl
+^ [TRANSITION] Learned Complexity is a feature, home grown complexity is debt
 
-^ Learned Complexity is a feature, home grown complexity is debt
+^ [TRANSITION] 100s of companies have contributed to k8s in the last year including: Apple, Amazon, Red Hat, Google, VM Ware, Spotify, Tesla
 
-^ 100s of companies have contributed to k8s in the last year including: Apple, Amazon, Red Hat, Google, VM Ware, Spotify, Tesla
+- A simple, _extendable_ API and client
+- Learned Complexity
+- Community
 
 ---
 
@@ -222,19 +241,21 @@ for getting better availability out of our BEAM applications.
 | Metrics                                   | metric-server, custom-metrics-server                  |
 
 ---
+
 # Kubernetes Best Features
 
 ^ These features here, aren't offered by a single cloud provider.
 
 ^ So lets look at these features.
 
-* A simple, _extendable_ API and client
-* Learned Complexity
-* Community
+- A simple, _extendable_ API and client
+- Learned Complexity
+- Community
 
 ---
 
 # [fit] Apps start out
+
 # [fit] **so cute**...
 
 ![right](images/cute-octopus.jpg)
@@ -249,10 +270,6 @@ for getting better availability out of our BEAM applications.
 ![right](images/not-so-cute-octopus.jpg)
 
 ^ The next thing you know, you've outgrown your PaaS, your VM, or maybe your tooling...
-
-^ Brittle deployments, bespoke bash scripts, bending over backwards to make things work
-
-^ Maybe you are already on 'the cloud' or are start to consider a migration
 
 - _Packer_ for VM Images
 - _Terraform_ for VM Instances
@@ -305,24 +322,32 @@ That's a lot of tooling.
 ![right](images/not-so-cute-octopus.jpg)
 
 ---
+
 [.text: alignment(center)]
 
 # [fit] Kubernetes
+
 # is
+
 # [fit] **Complicated**
 
 ^ Ok, Cory, sure we are creating complexity, but Kubernetes is COMPLICATED TOO
 
-^ High barrier to entry; 
-* That should be an Operational Burden 
-* Partially relieved by EKS/GKE
+^ High barrier to entry;
+
+- That should be an Operational Burden
+- Partially relieved by EKS/GKE
 
 ---
+
 [.text: alignment(center)]
 
 # [fit] Kubernetes
+
 # is
-# [fit] ~~Complicated~~ 
+
+# [fit] ~~Complicated~~
+
 # [fit] **Learned Complexity**
 
 <!-- ^ Do you need Kubernetes? No. Do you need a unified tool for managing cloud resources and workloads lifecycles? Probably. -->
@@ -348,26 +373,29 @@ That's a lot of tooling.
 ^ That may sound crazy, but...
 
 ---
+
 [.build-lists: true]
+
 # What can you deploy today?
 
-* Workloads
-* Batch jobs
-* Load balancers
-* DNS records
-* Machine learning models and pipelines (kubeflow)
-* DynamoDB Tables, S3 buckets, BigQuery Tables
+- Workloads
+- Batch jobs
+- Load balancers
+- DNS records
+- Machine learning models and pipelines (kubeflow)
+- DynamoDB Tables, S3 buckets, BigQuery Tables
 
 ^ AWS had released the service operator (SNS, SQS, Memcached, Redis)
 
 ^ GCP released Config Connector, it allows any GCP resource to be managed by the Kubernetes API.
 
-^ Its Google, so they could deprecate it any moment, 
-but in the meantime I can manage all of my resources on GCP with kubectl. 
+^ Its Google, so they could deprecate it any moment,
+but in the meantime I can manage all of my resources on GCP with kubectl.
 
 ^ There is still some work here to do on these tools, but its plausible that one day there won't be need for DeploymentManager, Terraform, or gcloud CLI
 
 ---
+
 [.text: alignment(center)]
 
 # [fit] The CNCF and Kubernetes Community
@@ -379,9 +407,11 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 [.footer: Source: [CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)]
 
 ---
+
 [.text: alignment(center)]
 
 # [fit] HOLY
+
 # [fit] :poop:!!!
 
 ---
@@ -399,18 +429,23 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 [.build-lists: true]
 
 # Recap:
-# What to pitch people 
+
+# What to pitch people
+
 # on when **considering Kubernetes**
 
-* A simple, _extendable_ API and client
-* Learned Complexity
-* Community
+- A simple, _extendable_ API and client
+- Learned Complexity
+- Community
 
 ---
 
-# [fit] The 
+# [fit] The
+
 # [fit] **Risk**
-# [fit] of 
+
+# [fit] of
+
 # [fit] Kubernetes
 
 ![](./images/leaky-boat.jpg)
@@ -428,8 +463,11 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 ---
 
 # [fit] Don't Expose Kubernetes to Developers
-# [fit] Use 
+
+# [fit] Use
+
 # [fit] **Continuous**
+
 # [fit] **Delivery**
 
 ^ When deploying kubernetes (read slide)
@@ -441,36 +479,51 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 ---
 
 # [fit] Leaky Abstraction?!
+
 # <br/>
-# [fit] Kubernetes Has A 
-# [fit] Simple, **Declarative** 
+
+# [fit] Kubernetes Has A
+
+# [fit] Simple, **Declarative**
+
 # [fit] Interface!!1!
 
 ^ You might be thinking...
 
 ---
+
 ![](./images/rust-bucket.jpeg)
 
-
 # Spoiler Alert:
+
 # [fit] **No**
-# [fit] It 
+
+# [fit] It
+
 # [fit] Doesn't
 
 ---
+
 ![](./images/skeleton.jpeg)
 
 # Spoiler Alert:
+
 # [fit] No
-# [fit] **It** 
+
+# [fit] **It**
+
 # [fit] Doesn't
 
 ---
+
 ![](./images/gunship.jpeg)
 
 # Spoiler Alert:
+
 # [fit] No
-# [fit] It 
+
+# [fit] It
+
 # [fit] **Doesn't**
 
 ---
@@ -484,8 +537,9 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 > One person's declarative is another person's imperative
 > -- me
 
-^ As Kubernetes gets more and more features I feel like it's declarativeness has slipped away, 
-and we have a lot more places where we _tell_ kubernetes the details of _how_ to run our workloads.
+^ More features, customization, declarativeness slipping away
+
+^ A lot of _how_ to run our workloads
 
 ^ This feels leaky. Its creating additional cognitive operational overload to already complicated applications.
 
@@ -501,7 +555,7 @@ and we have a lot more places where we _tell_ kubernetes the details of _how_ to
 
 [.code-highlight: 3-5, 10-12, 14-16]
 
-^ Uh ok, thats a lot of Copy/pasta. 
+^ Uh ok, thats a lot of Copy/pasta.
 
 [.code-highlight: 21-27]
 
@@ -553,21 +607,27 @@ spec:
 
 ---
 
-> F*ck that noise.
--- Johann Bach
+> F\*ck that noise.
+> -- Johann Bach
 
 ---
 
 # [fit] **Ops wants**
+
 # [fit] **Kubernetes,**
+
 # [fit] Devs want
+
 # [fit] Heroku
 
 ---
 
 # [fit] Ops wants
+
 # [fit] Kubernetes,
+
 # [fit] **Devs want**
+
 # [fit] **Heroku**
 
 ^ Want to see a declarative interface for deploying an app?
@@ -575,9 +635,13 @@ spec:
 ---
 
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # [fit] `git push`
 
 ^ This is a declarative interface for deploying applications.
@@ -587,9 +651,13 @@ spec:
 ---
 
 # So...
+
 # [fit] BEAM
+
 # [fit] and
+
 # [fit] Kubernetes:
+
 # [fit] **Better Together?**
 
 ^ let's talk about what we are here for.
@@ -637,25 +705,29 @@ spec:
 
 [.text: alignment(center)]
 
-^ There should be a pair of goggles under everyone's seat.
-
 # [fit] **WARNING!**
+
 ![fit original](./images/yaml_af.png)
+
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # [fit] **ALERT**
 
 ---
-[.code-highlight: all]
-[.code-highlight: 6,11]
 
+[.code-highlight: all][.code-highlight: 6,11]
 
 # Deployments
 
-^ So, if you've seen a Kubernet (singular form of k8s) before, you've definitely worked with Deployments. 
+^ So, if you've seen a Kubernet (singular form of k8s) before, you've definitely worked with Deployments.
 
 ^ If not, as the name suggests... its an application deployment.
 
@@ -663,7 +735,7 @@ spec:
 
 ^ CODE_TRANSITION: It deploys 3 instances of an application `better_together`, a prime calculator.
 
-^ Before we get into some of the more interesting kubernetes resources, 
+^ Before we get into some of the more interesting kubernetes resources,
 I wanted to talk about a few attributes of Deployments that can make your applications more resilient.
 
 ```yaml
@@ -681,6 +753,7 @@ spec:
 ```
 
 ---
+
 [.code-highlight: 12]
 
 # Pod Resources & QoS: BestEffort
@@ -694,7 +767,6 @@ spec:
 ^ No `resources` settings results in a BestEffort quality of service. BestEffort is the shrug emoji of availability.
 
 ```yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -715,12 +787,11 @@ spec:
 
 # Pod Resources & QoS: Burstable
 
-
-^ Setting a memory or CPU request in at least one container lands you in `Burstable`. 
+^ Setting a memory or CPU request in at least one container lands you in `Burstable`.
 
 ^ Kubernetes will give you the resource you requested, and allow your app to burst above when available.
 
-^ Setting limits are particularly important with the BEAM since it is so 
+^ Setting limits are particularly important with the BEAM since it is so
 good at resource utilization. Without limits, a pod could consume a majority of the node's CPU/RAM.
 
 ^ Can be tough on neighbor applications
@@ -743,16 +814,18 @@ spec:
               memory: 200Mi
             requests:
               cpu: 250m
-              memory: 200Mi   
+              memory: 200Mi
 ```
+
 ---
+
 [.code-highlight: 12-15]
 
 # Pod Resources & QoS: Guaranteed
 
-^ `Guaranteed` QoS is only achieved when all containers have resource limits set, 
+^ `Guaranteed` QoS is only achieved when all containers have resource limits set,
 
-^ This is really important, because if you are using sidecars, 
+^ This is really important, because if you are using sidecars,
 or mutation web hooks that add containers, and they dont set QoS to guaranteed, it will lower your entire pods QoS.
 
 ```yaml
@@ -825,15 +898,16 @@ spec:
 ^ RollingUpdates, as the name suggests, rolls out your update slowly, replacing old pods with new ones.
 
 ^ K8s defaults to a RollingUpdate with:
-* 25% max unavailable - lower's capacity
-* 25% max surge
+
+- 25% max unavailable - lower's capacity
+- 25% max surge
 
 ^ This allows k8s to surge when resources are available, or removing some of your pods if resources arent
 
-^ The Recreate strategy destroys and Recreates the deployment. Its much faster than 
+^ The Recreate strategy destroys and Recreates the deployment. Its much faster than
 a RollingUpdate, which makes it nice for development, but since the deployment is destroyed, can result in lower availability.
 
-^ Tuning these per application are really important for deployments. 
+^ Tuning these per application are really important for deployments.
 It effects rollout time and availability at the expense of resource consumption.
 
 ^ Looking at this YAML, you can see I have 4 replicas and a 50% surge.
@@ -864,6 +938,7 @@ spec:
 ^ The red box is the old replicaset ID, and the green box is the new replicaset ID
 
 ^ Now, since I have 0 as my maxUnavailable, this means two things.
+
 1. My application should continue to be able to serve as much traffic since I'm not losing a pod
 2. _BUT_ if the cluster is low on resources, my bursted pods might not be able to be scheduled, so its important to keep that in mind when tuning maxSurge, maxUnavailable
 
@@ -876,14 +951,13 @@ spec:
 ^ Without defining health checks, Kubernetes can only make assumptions about your applications health based on resource consumption
 
 > A pod without health checks is the Math Lady of Kubernetes
--- Nick Young
+> -- Nick Young
 
 ![inline](./images/math-lady-meme.jpg)
 
 ---
 
-[.code-highlight: 1-6]
-[.code-highlight: 7-12]
+[.code-highlight: 1-6][.code-highlight: 7-12]
 [.code-highlight: 4-6,10-12]
 
 # Health Checks
@@ -913,14 +987,13 @@ livenessProbe:
       - mix myapp.how_you_doing_fam
 ```
 
-<!--
----
+## <!--
 
 # Pod lifecycle
 
 ^ Pod's have a start and stop lifecycle event where ad-hoc httpGet and execs can be fired.
 
-^ preStop can be used to perform cleanup or execute tasks when a SIGTERM is received. 
+^ preStop can be used to perform cleanup or execute tasks when a SIGTERM is received.
 
 ^ In this example the host's name is broadcast to all other nodes to let them know its going down.
 
@@ -931,7 +1004,7 @@ containers:
     lifecycle:
       preStop:
         exec:
-          command: 
+          command:
             - bin/better_together
             - rpc
             - BetterTogether.ayyy_bros_ima_dip_out()
@@ -943,10 +1016,10 @@ containers:
 
 [.code-highlight: 2]
 
-^ Kuberntes will send a SIGTERM to your pods when they are being evicted. 
+^ Kuberntes will send a SIGTERM to your pods when they are being evicted.
 By default k8s will wait 30 seconds before sending a SIGKILL.
 
-^ `terminationGracePeriodSeconds` can be set to tune the time in between events. 
+^ `terminationGracePeriodSeconds` can be set to tune the time in between events.
 This can be used to tune your application to give it proper time to shutdown cleanly
 
 ^ Note: terminationGracePeriodSeconds is set for the pod, not a container, pods are a choesive unit.
@@ -958,39 +1031,40 @@ spec:
     - name: better-together
       image: quay.io/coryodaniel/better_together:latest
 ```
+
 -->
 
 ---
 
 # Affinity
+
 [.build-lists: true]
 
 ^ Affinity is a really interesting feature of kubernetes.
 
 ^ A few facets to affinity: [TRANSITION_THROUGH EACH] Affinity, AntiAffinity, Pod, Node, Preferred
 
-* Affinity of AntiAffinity
-* Pod or Node
-* Preferred or Required
+- Affinity of AntiAffinity
+- Pod or Node
+- Preferred or Required
 
 ---
 
 # `podAntiAffinity`
 
-[.code-highlight: all]
-[.code-highlight: 11-21]
-[.code-highlight: 16-20]
-[.code-highlight: 21-23]
+[.code-highlight: all][.code-highlight: 11-21]
+[.code-highlight: 16-20][.code-highlight: 21-23]
 [.code-highlight: 13-14]
 
 ^ Pod anti-affinity is particularly interesting:
-* [Example] App w/ in-memory process state example
-* [CODETRANS] I can use podAntiAffinity to tell kubernetes 
-* [CODETRANS] not to place two of my pods on the same node.
-* [CODETRANS] topologyKey is a way to identify a topology. Here I am basing my antiaffinity off of the node name, but it can be based on zone or region as well.
-* [CODETRANS] I do want to point out preferred vs required
-* In this case, my genserver memory is a nice to have, so id prefer it not on the same node, but I'm not requiring it.
-* Useful/Powerful feature, API perf costs on large clusters
+
+- [Example] App w/ in-memory process state example
+- [CODETRANS] I can use podAntiAffinity to tell kubernetes
+- [CODETRANS] not to place two of my pods on the same node.
+- [CODETRANS] topologyKey is a way to identify a topology. Here I am basing my antiaffinity off of the node name, but it can be based on zone or region as well.
+- [CODETRANS] I do want to point out preferred vs required
+- In this case, my genserver memory is a nice to have, so id prefer it not on the same node, but I'm not requiring it.
+- Useful/Powerful feature, API perf costs on large clusters
 
 ```yaml
 apiVersion: apps/v1
@@ -1002,41 +1076,47 @@ spec:
     spec:
       containers:
         - name: better-together
-          image: quay.io/coryodaniel/better_together:latest    
+          image: quay.io/coryodaniel/better_together:latest
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          # requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - better-together
-            topologyKey: "kubernetes.io/hostname"     
-            # topoloyKey: failure-domain.beta.kubernetes.io/zone
-            # topologyKey: failure-domain.beta.kubernetes.io/region            
+            # requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - better-together
+              topologyKey: "kubernetes.io/hostname"
+              # topoloyKey: failure-domain.beta.kubernetes.io/zone
+              # topologyKey: failure-domain.beta.kubernetes.io/region
 ```
 
 ---
 
-# [fit] Horizontal 
-# [fit] and 
-# [fit] Vertical 
+# [fit] Horizontal
+
+# [fit] and
+
+# [fit] Vertical
+
 # [fit] **Autoscalers**
+
 ![](./images/up-ship-creek.jpg)
 
 ^ First Resources we are looking at this isn't a part of a deployment
 
-^ Two types: 
-* horizontal - adds pods
-* vertical - adds resources
+^ Two types:
+
+- horizontal - adds pods
+- vertical - adds resources
 
 ---
 
 # HPA: Pod CPU
 
 [.code-highlight: 11-19]
+
 ```yaml
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
@@ -1051,12 +1131,12 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
 ```
 
 ^ HPAs will add additional pods based on resource consumption
@@ -1070,6 +1150,7 @@ spec:
 ^ Custom Metrics!
 
 ---
+
 [.code-highlight: 11-19]
 
 # HPA: Pod Custom Metrics
@@ -1094,24 +1175,26 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   metrics:
-  - type: Pods
-    pods:
-      metric:
-        name: packets-per-second
-      target:
-        type: AverageValue
-        averageValue: 1k
+    - type: Pods
+      pods:
+        metric:
+          name: packets-per-second
+        target:
+          type: AverageValue
+          averageValue: 1k
 ```
 
 ---
+
 [.code-highlight: 10-19]
+
 # HPA: External Metrics
 
 ^ Scale the number of pods off custom metrics
 Lets say I had a broadway consumer and I wanted to start more pods when Kafka consumer group lag is high
 
-^ [TRANSITION] I want to point out the version here as well, 
-this is a newer version of HPA. Fast rate of change, k8s API version, and resource versions. 
+^ [TRANSITION] I want to point out the version here as well,
+this is a newer version of HPA. Fast rate of change, k8s API version, and resource versions.
 This as a leaky abstraction can be painful
 
 ```yaml
@@ -1127,13 +1210,13 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - external:
-      metricName: my.external.kafka|consumer_group|lag
-      metricSelector:
-        matchLabels:
-          resource.labels.topic: good-topic
-      targetAverageValue: "2000"
-    type: External
+    - external:
+        metricName: my.external.kafka|consumer_group|lag
+        metricSelector:
+          matchLabels:
+            resource.labels.topic: good-topic
+        targetAverageValue: "2000"
+      type: External
 ```
 
 ---
@@ -1158,8 +1241,8 @@ metadata:
 spec:
   targetRef:
     apiVersion: "apps/v1"
-    kind:       Deployment
-    name:       better-together
+    kind: Deployment
+    name: better-together
   updatePolicy:
     updateMode: "Off"
 ```
@@ -1175,49 +1258,51 @@ spec:
 ```yaml
 recommendation:
   containerRecommendations:
-  - containerName: my-container
-    lowerBound:
-      cpu: 536m
-      memory: 262144k
-    target:
-      cpu: 587m
-      memory: 262144k
-    upperBound:
-      cpu: 27854m
-      memory: "545693548"
+    - containerName: my-container
+      lowerBound:
+        cpu: 536m
+        memory: 262144k
+      target:
+        cpu: 587m
+        memory: 262144k
+      upperBound:
+        cpu: 27854m
+        memory: "545693548"
 ```
 
-<!--
----
+## <!--
 
 # [fit] QUIRK
+
 # [fit] **ALERT**
 
 ---
 
 # CPU/Scheduler Quirks
 
-* Busy Wait
-* Scheduler count vs. resource requests (logical cpus vs cgroup) -> fixed in OTP 23; container aware
-* Concurrency, erlang is great at it, give it bigger pods, risk vs compute loss if a pod fails.
+- Busy Wait
+- Scheduler count vs. resource requests (logical cpus vs cgroup) -> fixed in OTP 23; container aware
+- Concurrency, erlang is great at it, give it bigger pods, risk vs compute loss if a pod fails.
 
 -->
 
 ---
 
 # **Service**
+
 # **Discovery**
 
 ![](./images/found-ya.jpg)
 
 ## <br />
+
 ## <br />
 
 ^ Kubernetes has built in service discovery and a local DNS service with records for all defined Services
 
 ---
-[.code-highlight: all]
-[.code-highlight: 5-6, 8-9]
+
+[.code-highlight: all][.code-highlight: 5-6, 8-9]
 
 ```yaml
 ---
@@ -1238,13 +1323,14 @@ spec:
 
 [.text: alignment(center)]
 
-[.code-highlight: 1]
-[.code-highlight: 2]
+[.code-highlight: 1][.code-highlight: 2]
 
-^ The format is svc name, namespace "svc.cluster.local", so my epmd service would be: 
+^ The format is svc name, namespace "svc.cluster.local", so my epmd service would be:
 
 # <br />
+
 # <br />
+
 # <br />
 
 ```yaml
@@ -1253,8 +1339,8 @@ better-together-epmd.prod.svc.cluster.local
 ```
 
 ---
-[.code-highlight: all]
-[.code-highlight: 6-7]
+
+[.code-highlight: all][.code-highlight: 6-7]
 
 # Service Discovery + libcluster
 
@@ -1304,9 +1390,10 @@ for incoming, high priority pods
 ^ pods waiting to be scheduled are orderd by the priority class, highest to lowest
 
 ---
+
 # PriorityClass
 
-^ A great example of this would be a high priority Checkout service in an ecommerce application. 
+^ A great example of this would be a high priority Checkout service in an ecommerce application.
 We may want to tolerate the loss of search or a highres image service to make sure checkout has the resources to run.
 
 ^ If there are contention for resources, we want to make sure that checkout service pods are able to be scheduled, so
@@ -1327,6 +1414,7 @@ description: "This priority class should be used by checkout service pods only."
 ```
 
 ---
+
 # PriorityClass
 
 [.code-highlight: 8]
@@ -1361,7 +1449,7 @@ spec:
 If we constantly disrupt our front-end application to keep checkout online, we might never get a customer into
 the checkout flow. PDBs could be used to set a minAvailable of our front end.
 
-^ If you are running a stateful workload that requires a quorom like etcd, zookeeper, 
+^ If you are running a stateful workload that requires a quorom like etcd, zookeeper,
 or an erlang/elixir app using Swarm, PDBs can be used to configured a minimum quorom that must be available
 
 ---
@@ -1381,28 +1469,34 @@ spec:
 ```
 
 ---
-[.build-lists: true]
-[.text: alignment(center)]
+
+[.build-lists: true][.text: alignment(center)]
 
 # [fit] Bonus Round:
+
 # <br />
+
 # <br />
+
 # <br />
+
 # <br />
+
 # [fit] **Security**
 
 ![](./images/security.jpg)
 
 ---
+
 [.build-lists: true]
 
 # Bonus Round: **Security**
 
 ^ Fault tolerance, resiliancy, and reliability are nothing if you get POWNED
 
-* PodSecurityPolicy
-* pod.spec.securityContext
-* pod.spec.containers.securityContext
+- PodSecurityPolicy
+- pod.spec.securityContext
+- pod.spec.containers.securityContext
 
 ^ [TRANS] K8s has a few options for applying security constraints to your docker containers
 
@@ -1417,10 +1511,11 @@ spec:
 ^ securityContext lets you set security attributes at a pod or container level
 
 ^ Some low hanging fruit
-* Disable running as root, makes you the most popular person in the org
-* Disable privilege escalation
-* Set read-only filesystem
-* Force pods to run as an unprivileged user
+
+- Disable running as root, makes you the most popular person in the org
+- Disable privilege escalation
+- Set read-only filesystem
+- Force pods to run as an unprivileged user
 
 ```yaml
 apiVersion: apps/v1
@@ -1446,10 +1541,10 @@ spec:
 
 # Security Tools
 
-* [Distroless](https://github.com/GoogleContainerTools/distroless)
-* [kubeaudit](https://github.com/Shopify/kubeaudit)
-* [kube-bench](https://github.com/aquasecurity/kube-bench)
-* [kube-hunter](https://github.com/aquasecurity/kube-hunter)
+- [Distroless](https://github.com/GoogleContainerTools/distroless)
+- [kubeaudit](https://github.com/Shopify/kubeaudit)
+- [kube-bench](https://github.com/aquasecurity/kube-bench)
+- [kube-hunter](https://github.com/aquasecurity/kube-hunter)
 
 ^ Distroless: Docker images contain only your application and its runtime dependencies - no shell, package managers, or anything else.
 
@@ -1476,21 +1571,23 @@ spec:
 ^ 4. The community has built hundreds of features and extensions to Kubernetes to operate complex systems and automate day-2 operations.
 
 1. Boats are friggin dangerous.
-2. Kubernetes is complex, but learned complexity is a feature. 
+2. Kubernetes is complex, but learned complexity is a feature.
 3. Simple, extendable API.
 4. Community built, powerful features to make you go webscale.
 
-^ k8s and beam are absolutely better together, 
+^ k8s and beam are absolutely better together,
 k8s provides a lot of availability features that the BEAM and Erlang does not, but
-your ogranization and team needs to be ready to dedicate resources to managing 
+your ogranization and team needs to be ready to dedicate resources to managing
 and operating kubenetes
 
-<!-- 
----
+## <!--
 
-# [fit] Where Can 
+# [fit] Where Can
+
 # [fit] **We**
-# [fit] **Go** 
+
+# [fit] **Go**
+
 # [fit] From Here?
 
 ![](./images/kotp.jpeg)
@@ -1505,17 +1602,17 @@ and operating kubenetes
 
 ^ I would love to see a set of tools to bring kubernetes and the beam closer together
 
-* Persist erl_crash.dump
-* Connect SASL Alerts to AlertManager
-* Auto-tune busywait
-* Autoscaling schedulers to match CPU resource requests/limits
-* An official Distroless for the BEAM
+- Persist erl_crash.dump
+- Connect SASL Alerts to AlertManager
+- Auto-tune busywait
+- Autoscaling schedulers to match CPU resource requests/limits
+- An official Distroless for the BEAM
 
 ---
 
 # Applications as Extensions
 
-* Use the operator pattern to abstract away the complexity of your app
+- Use the operator pattern to abstract away the complexity of your app
 
 ```yaml
 apiVersion: my-company.bonny.run/v1
@@ -1528,6 +1625,7 @@ spec:
   dockerTag: 1.2.3
   logLevel: debug
 ```
+
 -->
 
 ---
