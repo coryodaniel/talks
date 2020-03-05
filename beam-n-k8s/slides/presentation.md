@@ -1057,7 +1057,6 @@ spec:
 ^ First Resources we are looking at this isn't a part of a deployment
 
 ^ Two types:
-
 - horizontal - adds pods
 - vertical - adds resources
 
