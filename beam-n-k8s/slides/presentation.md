@@ -1562,7 +1562,7 @@ spec:
 
 [.build-lists: true]
 
-^ 2. Make sure you have the resources to know what you are operating.
+^ 2. Learned complexity is a feature, but I cant stress this enough if you dont have the time or resources to understand what youre operating, you dont need kubernetes
 
 ^ 3. Simple, extendable API, everything we saw today was using the same tool, and the same REST API
 
@@ -1579,54 +1579,6 @@ spec:
 k8s provides a lot of availability features that the BEAM and Erlang does not, but
 your ogranization and team needs to be ready to dedicate resources to managing
 and operating kubenetes
-
-## <!--
-
-# [fit] Where Can
-
-# [fit] **We**
-
-# [fit] **Go**
-
-# [fit] From Here?
-
-![](./images/kotp.jpeg)
-
----
-
-[.build-lists: true]
-
-# [fit] You down with **kOTP**?
-
-![](./images/kotp.jpeg)
-
-^ I would love to see a set of tools to bring kubernetes and the beam closer together
-
-- Persist erl_crash.dump
-- Connect SASL Alerts to AlertManager
-- Auto-tune busywait
-- Autoscaling schedulers to match CPU resource requests/limits
-- An official Distroless for the BEAM
-
----
-
-# Applications as Extensions
-
-- Use the operator pattern to abstract away the complexity of your app
-
-```yaml
-apiVersion: my-company.bonny.run/v1
-kind: CheckoutMicroservice
-metadata:
-  name: checkout
-spec:
-  env: prod
-  hostname: checkout.example.com
-  dockerTag: 1.2.3
-  logLevel: debug
-```
-
--->
 
 ---
 
