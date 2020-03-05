@@ -1516,8 +1516,11 @@ and operating kubenetes
 
 ---
 
-[.text: alignment(center)]
+# [fit] **Bon Voyage!**
 
-# [fit] **Bon Voyage**
+## <br />
 
-![](./images/bonny-banner.png)
+- Twitter: @coryodaniel
+- Github: @coryodaniel
+
+![right](./images/bonny-banner.png)
