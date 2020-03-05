@@ -2,9 +2,6 @@ theme: work, 3
 quote: #f1be52, Helvetica
 quote-author: #fff, "Work Sans"
 
-<!-- # [fit] BEAM and Kubernetes:
-# [fit] Better Together? -->
-
 # <br />
 
 # <br />
@@ -349,8 +346,6 @@ That's a lot of tooling.
 # [fit] ~~Complicated~~
 
 # [fit] **Learned Complexity**
-
-<!-- ^ Do you need Kubernetes? No. Do you need a unified tool for managing cloud resources and workloads lifecycles? Probably. -->
 
 ^ A single tool (and API) to manage: workloads, load balancers, service discovery entries, dns records, metrics systems, databases, buckets.
 
@@ -723,7 +718,8 @@ spec:
 
 ---
 
-[.code-highlight: all][.code-highlight: 6,11]
+[.code-highlight: all]
+[.code-highlight: 6,11]
 
 # Deployments
 
@@ -898,7 +894,6 @@ spec:
 ^ RollingUpdates, as the name suggests, rolls out your update slowly, replacing old pods with new ones.
 
 ^ K8s defaults to a RollingUpdate with:
-
 - 25% max unavailable - lower's capacity
 - 25% max surge
 
@@ -957,7 +952,8 @@ spec:
 
 ---
 
-[.code-highlight: 1-6][.code-highlight: 7-12]
+[.code-highlight: 1-6]
+[.code-highlight: 7-12]
 [.code-highlight: 4-6,10-12]
 
 # Health Checks
@@ -987,53 +983,6 @@ livenessProbe:
       - mix myapp.how_you_doing_fam
 ```
 
-## <!--
-
-# Pod lifecycle
-
-^ Pod's have a start and stop lifecycle event where ad-hoc httpGet and execs can be fired.
-
-^ preStop can be used to perform cleanup or execute tasks when a SIGTERM is received.
-
-^ In this example the host's name is broadcast to all other nodes to let them know its going down.
-
-```yaml
-containers:
-  - name: better-together
-    image: quay.io/coryodaniel/better_together:latest
-    lifecycle:
-      preStop:
-        exec:
-          command:
-            - bin/better_together
-            - rpc
-            - BetterTogether.ayyy_bros_ima_dip_out()
-```
-
----
-
-# Pod Termination
-
-[.code-highlight: 2]
-
-^ Kuberntes will send a SIGTERM to your pods when they are being evicted.
-By default k8s will wait 30 seconds before sending a SIGKILL.
-
-^ `terminationGracePeriodSeconds` can be set to tune the time in between events.
-This can be used to tune your application to give it proper time to shutdown cleanly
-
-^ Note: terminationGracePeriodSeconds is set for the pod, not a container, pods are a choesive unit.
-
-```yaml
-spec:
-  terminationGracePeriodSeconds: 30
-  containers:
-    - name: better-together
-      image: quay.io/coryodaniel/better_together:latest
-```
-
--->
-
 ---
 
 # Affinity
@@ -1052,12 +1001,13 @@ spec:
 
 # `podAntiAffinity`
 
-[.code-highlight: all][.code-highlight: 11-21]
-[.code-highlight: 16-20][.code-highlight: 21-23]
+[.code-highlight: all]
+[.code-highlight: 11-21]
+[.code-highlight: 16-20]
+[.code-highlight: 21-23]
 [.code-highlight: 13-14]
 
 ^ Pod anti-affinity is particularly interesting:
-
 - [Example] App w/ in-memory process state example
 - [CODETRANS] I can use podAntiAffinity to tell kubernetes
 - [CODETRANS] not to place two of my pods on the same node.
@@ -1270,22 +1220,6 @@ recommendation:
         memory: "545693548"
 ```
 
-## <!--
-
-# [fit] QUIRK
-
-# [fit] **ALERT**
-
----
-
-# CPU/Scheduler Quirks
-
-- Busy Wait
-- Scheduler count vs. resource requests (logical cpus vs cgroup) -> fixed in OTP 23; container aware
-- Concurrency, erlang is great at it, give it bigger pods, risk vs compute loss if a pod fails.
-
--->
-
 ---
 
 # **Service**
@@ -1302,7 +1236,8 @@ recommendation:
 
 ---
 
-[.code-highlight: all][.code-highlight: 5-6, 8-9]
+[.code-highlight: all]
+[.code-highlight: 5-6, 8-9]
 
 ```yaml
 ---
@@ -1323,7 +1258,8 @@ spec:
 
 [.text: alignment(center)]
 
-[.code-highlight: 1][.code-highlight: 2]
+[.code-highlight: 1]
+[.code-highlight: 2]
 
 ^ The format is svc name, namespace "svc.cluster.local", so my epmd service would be:
 
@@ -1340,7 +1276,8 @@ better-together-epmd.prod.svc.cluster.local
 
 ---
 
-[.code-highlight: all][.code-highlight: 6-7]
+[.code-highlight: all]
+[.code-highlight: 6-7]
 
 # Service Discovery + libcluster
 
@@ -1470,7 +1407,8 @@ spec:
 
 ---
 
-[.build-lists: true][.text: alignment(center)]
+[.build-lists: true]
+[.text: alignment(center)]
 
 # [fit] Bonus Round:
 
@@ -1511,7 +1449,6 @@ spec:
 ^ securityContext lets you set security attributes at a pod or container level
 
 ^ Some low hanging fruit
-
 - Disable running as root, makes you the most popular person in the org
 - Disable privilege escalation
 - Set read-only filesystem
