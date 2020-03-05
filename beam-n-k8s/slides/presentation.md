@@ -331,7 +331,6 @@ That's a lot of tooling.
 ^ Ok, Cory, sure we are creating complexity, but Kubernetes is COMPLICATED TOO
 
 ^ High barrier to entry;
-
 - That should be an Operational Burden
 - Partially relieved by EKS/GKE
 
@@ -427,7 +426,7 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 
 # What to pitch people
 
-# on when **considering Kubernetes**
+# when **considering Kubernetes**
 
 - A simple, _extendable_ API and client
 - Learned Complexity
@@ -932,8 +931,7 @@ spec:
 ^ And when I deploy, kubernetes will burst 50% of a new replica set.
 ^ The red box is the old replicaset ID, and the green box is the new replicaset ID
 
-^ Now, since I have 0 as my maxUnavailable, this means two things.
-
+^ Now, since I have 0 as my maxUnavailable, this means two things:
 1. My application should continue to be able to serve as much traffic since I'm not losing a pod
 2. _BUT_ if the cluster is low on resources, my bursted pods might not be able to be scheduled, so its important to keep that in mind when tuning maxSurge, maxUnavailable
 
