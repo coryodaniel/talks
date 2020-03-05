@@ -357,7 +357,7 @@ That's a lot of tooling.
 ^ **8:30 MINUTES**
 
 ---
-
+[.text: alignment(left)]
 ^ I have a prediction.
 
 > In the next few years, the Kubernetes API will become the common API for interfacing with cloud resources.
@@ -446,11 +446,15 @@ but in the meantime I can manage all of my resources on GCP with kubectl.
 
 ^ I know "Unpopular Opinions" are popular on twitter, but how do y'all feel about incendiary opinions?
 
+^ Its not security, you have to secure that stuff anyway
+
+^ Its not moving your app to microservices, DONT, you can start on k8s w/ a monolith
+
 ^ The biggest risk when deploying kubernetes is a leaky abstration that requires your application developers to become intimately familiar with k8s.
 
-^ Everyone that was still standing early, has been exposerd to this risk.
+^ Everyone that had their hands still up earlier, has been exposed to this risk.
 
-^ DevOps is a practice to make operations better, not another role you toss on your full stack developers.
+^ DevOps is a practice to make operations better, not another role you toss on your app developers.
 
 ^ If your application developers are doing "devops", they spending less time building business value.
 
@@ -600,7 +604,7 @@ spec:
 [.footer: Excerpt from the eviction-operator manifest generated with Bonny. Originally ~180 lines.]
 
 ---
-
+[.text: alignment(left)]
 > F\*ck that noise.
 > -- Johann Bach
 
@@ -1400,6 +1404,36 @@ spec:
   selector:
     matchLabels:
       app: front-end
+```
+
+---
+
+# **Application** Operators
+
+![](./images/yacht-on-a-yacht.jpg)
+
+---
+
+# Application Operators 
+
+^ Why cant our apps be this simple?
+
+^ We can use operator frameworks like Bonny to abstract away all of our kubernetes best practices, security, and availability concerns
+
+^ If our config/secrets are in vault or KMS
+
+^ let ops handle services, external-dns, mounts, secrets
+
+^ devs just say, what version and what env
+
+```yaml
+kind: CheckoutApplication
+apiVersion: apps.myorg.com/v1
+metadata:
+  name: checkout
+spec:
+  dockerTag: 1.0.1
+  env: prod
 ```
 
 ---
