@@ -10,14 +10,6 @@ class:
 
 ![bg](./assets/shipwreck.jpg)
 
----
-<!-- paginate: true -->
-<!-- _class: gaia lead -->
-## Getting Started
-
-* Setting up a cluster
-* Explore `kubectl`
-
 --- 
 ### Setting up a cluster
 <!-- _class: gaia lead -->
@@ -430,9 +422,70 @@ If you click "exhaust CPU" a bunch, you'll see a bunch of pods start up
 `kubectl delete -f ./manifests/service.yaml`
 
 ---
-### Job
+### What _is_ a Job?
 
-Wraps a Pod
+<!--
+Everything we have seen so far have been request-based workloads 
+--->
+
+Kubernetes also supports running 'job' workloads.
+
+`kubectl apply -f ./manifests/job.yaml`
+
+We can use the same commands we used the other resource types:
+
+```shell
+kubectl get jobs
+kubectl get pods
+kubectl explain jobs.spec
+```
+
+We can combine commands to dynamically get our pod name:
+
+```shell
+kubectl logs pod/$(kubectl get pods --selector=job-name=succeeding-job --output=jsonpath="{.items[0].metadata.name}")
+```
+
+<!--
+This last command uses kubectl output and a selector to make a jsonpath query that outputs the name of the pod created by the job.
+
+-->
+
+---
+### Jobs May Fail
+
+
+`kubectl apply -f ./manifests/failing-job.yaml`
+
+```yaml
+backoffLimit: 3
+template:
+  spec:
+    restartPolicy: OnFailure
+    containers:
+    - name: example-app
+      image: coryodaniel/example-app
+      command: ["/example-app",  "-mode=job", "-job-force-fail", "-job-min-sleep=10"]
+```
+
+---
+### Job Lifecycle Controls
+
+Kubernetes provides various controls for jobs:
+
+* restartPolicy
+* activeDeadlineSeconds
+* backoffLimit
+* completions
+* parallelism
+
+<!--
+* restartPolicy - Never, OnFailure - restart the pod or make a new one when failing
+* activeDeadlineSeconds - Timeout before the job should be stopped
+* backoffLimit - number of retries in event of failure
+* completions - how many times to run the job (could be process a mailing list, one email per run)
+* parallelism - how many pods to run in parallel to finish the job
+-->
 
 ---
 ### Other Resources
