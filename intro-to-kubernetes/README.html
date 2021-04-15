@@ -45,7 +45,8 @@ complete -F __start_kubectl k
 Server Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;...}
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="7" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./assets/yaml_af.png&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="7" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="gaia" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3><code>kubectl</code> Whirlwind Tour</h3>
 
 <p>Verb/Resource based interface</p>
@@ -55,7 +56,7 @@ Server Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;...}
 <p><em>Namespaces</em> are virtual clusters. You'll generally work in <em>default</em>.</p>
 <p><code>kubectl get namespaces</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="9" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3><code>kubectl</code> Whirlwind Tour</h3>
 <p><strong>kubectl</strong> acts on an <em>extendable</em> OpenAPI 3 API hosted by the Kubernetes' control plane nodes.</p>
 <p>Setting the verbosity on a command will show resource URLs and other request metadata.</p>
@@ -63,7 +64,7 @@ Server Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;...}
 <p>You can also use <strong>kubectl</strong> to inspect which resource types are available on a cluster:</p>
 <p><code>kubectl api-resources -oname</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="9" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3><code>kubectl</code> Whirlwind Tour</h3>
 <p><strong>kubectl</strong> can also manage and deploy workloads in Kubernetes.</p>
 <p>The <code>apply</code> command is an idempotent deployment command.</p>
@@ -75,7 +76,7 @@ Server Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;...}
 <p>We should see the <em>metrics-server</em> pod starting up.</p>
 <p><code>kubectl get pods --namespace kube-system</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3><code>kubectl</code> Metadata and Help</h3>
 
 <p>View all resource types this cluster can manage:<br />
@@ -93,7 +94,7 @@ kubectl explain pod.spec.containers.image
 kubectl explain pod --recursive
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-marpit-fragments="5" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-marpit-fragments="5" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>What <em>is</em> a Pod?</h3>
 <ul>
 <li data-marpit-fragment="1">1 or more collocated docker containers</li>
@@ -106,7 +107,7 @@ kubectl explain pod --recursive
 
 <p><code>kubectl apply --filename ./manifests/pod.yaml</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-marpit-fragments="4" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-marpit-fragments="4" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>What <em>is</em> a Pod?</h3>
 <p>Inspect the definition from the cluster:</p>
 
@@ -118,7 +119,7 @@ kubectl explain pod --recursive
 <li data-marpit-fragment="4">spec</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-marpit-fragments="4" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-marpit-fragments="4" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Exploring a Pod</h3>
 <ul>
 <li data-marpit-fragment="1">List all pods in namespace: <code>kubectl get pods</code></li>
@@ -127,7 +128,7 @@ kubectl explain pod --recursive
 <li data-marpit-fragment="4">Watch events in the cluster sorted by time: <code>kubectl get events --sort-by=.metadata.creationTimestamp --watch</code></li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-marpit-fragments="2" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-marpit-fragments="2" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Exploring a Pod</h3>
 
 <p>Two ways to access a pods port:</p>
@@ -137,7 +138,7 @@ kubectl explain pod --recursive
 <li data-marpit-fragment="2">Temporarily expose a port: <code>kubectl port-forward pod/example-app 8080:8080</code></li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Exploring a Pod</h3>
 
 <p>In a second window:</p>
@@ -145,12 +146,12 @@ kubectl explain pod --recursive
 <p>Open localhost:8080 and click through any insecure notices:</p>
 <p><code>open http://localhost:8080</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Exploring a Pod</h3>
 <p>See current CPU and memory utilization:</p>
 <p><code>kubectl top pods</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Exploring a Pod</h3>
 <p>Look for &quot;last state&quot; of the pod by describing it:</p>
 <p><code>kubectl describe pods/example-app</code></p>
@@ -158,7 +159,7 @@ kubectl explain pod --recursive
 <p>Delete the pod when you are done:</p>
 <p><code>kubectl delete -f manifests/pod.yaml</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>What <em>is</em> a Replicaset?</h3>
 <p>A replica set:</p>
 <ul>
@@ -172,7 +173,7 @@ kubectl explain pod.spec &gt; pod.txt
 diff pod.txt replica-template.txt
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>What <em>is</em> a Deployment?</h3>
 <p>A deployment:</p>
 <ul>
@@ -183,7 +184,7 @@ diff pod.txt replica-template.txt
 <p>Deploy our application:<br />
 <code>kubectl apply --filename ./manifests/deployment.yaml</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-marpit-fragments="2" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-marpit-fragments="2" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Explore a Deployment</h3>
 <p>The most important feature of a deployment is how the deployment is performed:</p>
 <pre><code class="language-yaml"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-attr">strategy:</span>
@@ -198,8 +199,8 @@ diff pod.txt replica-template.txt
 <li data-marpit-fragment="2">maxUnavailable - consumes same resources, but sacrifices availability</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./assets/k8s-flow.png&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="21" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="gaia" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./assets/k8s-flow.png&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="22" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="gaia" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>A Brief Tangent on Services</h3>
 <p>Visit localhost again:<br />
 <code>open http://localhost:8080</code></p>
@@ -213,7 +214,7 @@ diff pod.txt replica-template.txt
     <span class="hljs-attr">targetPort:</span> <span class="hljs-string">web</span>
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Horizontal Pod Autoscaler</h3>
 
 <ul>
@@ -222,7 +223,7 @@ diff pod.txt replica-template.txt
 <li data-marpit-fragment="3">Can access alternative metrics sources to scale based on SLOs (sick!)</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Horizontal Pod Autoscaler</h3>
 <p><code>kubectl apply -f ./manifests/horizontalpodautoscaler.yaml</code></p>
 <pre><code class="language-yaml"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>  <span class="hljs-attr">minReplicas:</span> <span class="hljs-number">1</span>
@@ -236,13 +237,13 @@ diff pod.txt replica-template.txt
 <p>Lets watch the pods in our deployment:</p>
 <p><code>kubectl get pods --watch</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Cleanup our Deployment, Service, and HPA</h3>
 <p><code>kubectl delete -f ./manifests/horizontalpodautoscaler.yaml</code><br />
 <code>kubectl delete -f ./manifests/deployment.yaml</code><br />
 <code>kubectl delete -f ./manifests/service.yaml</code></p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>What <em>is</em> a Job?</h3>
 
 <p>Kubernetes also supports running 'job' workloads.</p>
@@ -256,7 +257,7 @@ kubectl explain jobs.spec
 <pre><code class="language-shell"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>kubectl logs pod/$(kubectl get pods --selector=job-name=succeeding-job --output=jsonpath=&quot;{.items[0].metadata.name}&quot;)
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Jobs May Fail</h3>
 <p><code>kubectl apply -f ./manifests/failing-job.yaml</code></p>
 <pre><code class="language-yaml"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-attr">backoffLimit:</span> <span class="hljs-number">3</span>
@@ -269,7 +270,7 @@ kubectl explain jobs.spec
       <span class="hljs-attr">command:</span> [<span class="hljs-string">&quot;/example-app&quot;</span>,  <span class="hljs-string">&quot;-mode=job&quot;</span>, <span class="hljs-string">&quot;-job-force-fail&quot;</span>, <span class="hljs-string">&quot;-job-min-sleep=10&quot;</span>]
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-marpit-fragments="5" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-marpit-fragments="5" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Job Lifecycle Controls</h3>
 <p>Kubernetes provides various controls for jobs:</p>
 <ul>
@@ -280,7 +281,7 @@ kubectl explain jobs.spec
 <li data-marpit-fragment="5">parallelism</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-marpit-fragments="5" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-marpit-fragments="5" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Other Resources</h3>
 <p>There are lots of other resource types to explore:</p>
 <pre><code class="language-shell"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>kubectl api-resources
@@ -294,7 +295,7 @@ kubectl explain jobs.spec
 <li data-marpit-fragment="5">Secrets</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-marpit-fragments="3" data-class="gaia" data-theme="gaia" class="gaia" style="--class:gaia;--theme:gaia;">
 <h3>Thanks!</h3>
 <ul>
 <li data-marpit-fragment="1"><a href="https://github.com/coryodaniel/talks/tree/master/intro-to-kubernetes">Slides &amp; Source</a></li>
@@ -303,36 +304,36 @@ kubectl explain jobs.spec
 </ul>
 </section>
 <script>!function(){"use strict";const t="marpitSVGPolyfill:setZoomFactor,",e=Symbol();let r,o;function n(n){const i="object"==typeof n&&n.target||document,a="object"==typeof n?n.zoom:n;window[e]||(Object.defineProperty(window,e,{configurable:!0,value:!0}),window.addEventListener("message",(({data:e,origin:r})=>{if(r===window.origin)try{if(e&&"string"==typeof e&&e.startsWith(t)){const[,t]=e.split(","),r=Number.parseFloat(t);Number.isNaN(r)||(o=r)}}catch(t){console.error(t)}})));let l=!1;Array.from(i.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,n,i,s;t.style.transform||(t.style.transform="translateZ(0)");const c=a||o||t.currentScale||1;r!==c&&(r=c,l=c);const d=t.getBoundingClientRect(),{length:u}=t.children;for(let r=0;r<u;r+=1){const o=t.children[r],a=o.getScreenCTM();if(a){const t=null!==(n=null===(e=o.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==n?n:0,r=null!==(s=null===(i=o.y)||void 0===i?void 0:i.baseVal.value)&&void 0!==s?s:0,l=o.firstElementChild,{style:u}=l;u.transformOrigin||(u.transformOrigin=`${-t}px ${-r}px`),u.transform=`scale(${c}) matrix(${a.a}, ${a.b}, ${a.c}, ${a.d}, ${a.e-d.left}, ${a.f-d.top}) translateZ(0.0001px)`}}})),!1!==l&&Array.from(i.querySelectorAll("iframe"),(({contentWindow:e})=>{null==e||e.postMessage(`${t}${l}`,"null"===window.origin?"*":window.origin)}))}r=1,o=void 0;const i=(t,e,r)=>{if(t.getAttribute(e)!==r)return t.setAttribute(e,r),!0};function a({once:t=!1,target:e=document}={}){const r="Apple Computer, Inc."===navigator.vendor?[n]:[];let o=!t;const a=()=>{for(const t of r)t({target:e});!function(t=document){Array.from(t.querySelectorAll('svg[data-marp-fitting="svg"]'),(t=>{var e;const r=t.firstChild,o=r.firstChild,{scrollWidth:n,scrollHeight:a}=o;let l,s=1;if(t.hasAttribute("data-marp-fitting-code")&&(l=null===(e=t.parentElement)||void 0===e?void 0:e.parentElement),t.hasAttribute("data-marp-fitting-math")&&(l=t.parentElement),l){const t=getComputedStyle(l),e=Math.ceil(l.clientWidth-parseFloat(t.paddingLeft||"0")-parseFloat(t.paddingRight||"0"));e&&(s=e)}const c=Math.max(n,s),d=Math.max(a,1),u=`0 0 ${c} ${d}`;i(r,"width",`${c}`),i(r,"height",`${d}`),i(t,"preserveAspectRatio",getComputedStyle(t).getPropertyValue("--preserve-aspect-ratio")||"xMinYMin meet"),i(t,"viewBox",u)&&t.classList.toggle("__reflow__")}))}(e),o&&window.requestAnimationFrame(a)};return a(),()=>{o=!1}}const l=Symbol(),s=document.currentScript;((t=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(t[l])return t[l];const e=a({target:t}),r=()=>{e(),delete t[l]};Object.defineProperty(t,l,{configurable:!0,value:r})})(s?s.getRootNode():document)}();
-</script></foreignObject></svg></div><div class="bespoke-marp-note" data-index="4" tabindex="0"><p>Enabling k8s will add an entries to ~/.kube/config for the k8s server and authentication.</p></div><div class="bespoke-marp-note" data-index="6" tabindex="0"><p>It's pronounced &quot;kube cartel&quot;</p><p>You'll rarely interact with these, but you can still inspect them!</p><p>* virtual cluster, arguably soft multitenancy
-* network policies, resource limitations, security policies, and more</p></div><div class="bespoke-marp-note" data-index="8" tabindex="0"><p>Feel free to run the following command a few times, you should see nothing change since the manifests haven't changed.</p><p>You can also 'delete' a manifest. Note that that manifest has _many_ resources inside of it.
-You will generally define resource manifests as a cohesive unit of functionality</p><p>We'll use this to inspect CPU usage later.</p></div><div class="bespoke-marp-note" data-index="9" tabindex="0"><p>earlier we saw the resources command</p><p>Documentation for all resource types are available from the CLI</p></div><div class="bespoke-marp-note" data-index="10" tabindex="0"><p>not setting the namespace will put it in &quot;default&quot;</p><p>* Web App + Redis over localhost, redis can cluster w/ other pods over virtual network
-* Nginx reverse proxy</p></div><div class="bespoke-marp-note" data-index="11" tabindex="0"><p>The manifests are stored in the cluster after &quot;applying&quot;</p><p>API Version: Allows you to have duplicate &quot;kinds&quot; of resources without conflict
+</script></foreignObject></svg></div><div class="bespoke-marp-note" data-index="4" tabindex="0"><p>Enabling k8s will add an entries to ~/.kube/config for the k8s server and authentication.</p></div><div class="bespoke-marp-note" data-index="6" tabindex="0"><p>Are you ready for the greatest language ever?</p></div><div class="bespoke-marp-note" data-index="7" tabindex="0"><p>It's pronounced &quot;kube cartel&quot;</p><p>You'll rarely interact with these, but you can still inspect them!</p><p>* virtual cluster, arguably soft multitenancy
+* network policies, resource limitations, security policies, and more</p></div><div class="bespoke-marp-note" data-index="9" tabindex="0"><p>Feel free to run the following command a few times, you should see nothing change since the manifests haven't changed.</p><p>You can also 'delete' a manifest. Note that that manifest has _many_ resources inside of it.
+You will generally define resource manifests as a cohesive unit of functionality</p><p>We'll use this to inspect CPU usage later.</p></div><div class="bespoke-marp-note" data-index="10" tabindex="0"><p>earlier we saw the resources command</p><p>Documentation for all resource types are available from the CLI</p></div><div class="bespoke-marp-note" data-index="11" tabindex="0"><p>not setting the namespace will put it in &quot;default&quot;</p><p>* Web App + Redis over localhost, redis can cluster w/ other pods over virtual network
+* Nginx reverse proxy</p></div><div class="bespoke-marp-note" data-index="12" tabindex="0"><p>The manifests are stored in the cluster after &quot;applying&quot;</p><p>API Version: Allows you to have duplicate &quot;kinds&quot; of resources without conflict
 Metadata: name, namespace, labels, annotations
 Spec: attributes of the resource
   Note: containers (image, ports, env, resources)
-  You can learn more by using kubectl explain</p></div><div class="bespoke-marp-note" data-index="12" tabindex="0"><p>Start the command in a new terminal and open a second terminal</p></div><div class="bespoke-marp-note" data-index="13" tabindex="0"><p>So we can see that we have a pod running and its outputting logs, how do we access it?
+  You can learn more by using kubectl explain</p></div><div class="bespoke-marp-note" data-index="13" tabindex="0"><p>Start the command in a new terminal and open a second terminal</p></div><div class="bespoke-marp-note" data-index="14" tabindex="0"><p>So we can see that we have a pod running and its outputting logs, how do we access it?
 We saw a port number in the YAML output... but where _is_ that bound.
 The answer is no where we can get to right now.
-Workloads and traffic routing are two separate concepts in k8s</p><p>Just run the first command, the second is great for debugging</p></div><div class="bespoke-marp-note" data-index="14" tabindex="0"><p>You should still have the levents terminals open.</p><p>Click &quot;Crash the app&quot;
+Workloads and traffic routing are two separate concepts in k8s</p><p>Just run the first command, the second is great for debugging</p></div><div class="bespoke-marp-note" data-index="15" tabindex="0"><p>You should still have the levents terminals open.</p><p>Click &quot;Crash the app&quot;
 * we should see: kubernetes restart the failed container
 * Look at the events tab and we should see a series of events
-* navigate back to http://localhost:8080 (make sure not to refresh or it will hit /crash)</p></div><div class="bespoke-marp-note" data-index="15" tabindex="0"><p>* Click &quot;Exhaust Memory&quot; a few more times and keep running kubectl top pods
-* Switch back to &quot;events&quot; and you should see that the pod was restarted because it exceeded its memory limits</p></div><div class="bespoke-marp-note" data-index="16" tabindex="0"><p>We should see OOMKilled
+* navigate back to http://localhost:8080 (make sure not to refresh or it will hit /crash)</p></div><div class="bespoke-marp-note" data-index="16" tabindex="0"><p>* Click &quot;Exhaust Memory&quot; a few more times and keep running kubectl top pods
+* Switch back to &quot;events&quot; and you should see that the pod was restarted because it exceeded its memory limits</p></div><div class="bespoke-marp-note" data-index="17" tabindex="0"><p>We should see OOMKilled
 So we saw kubernetes recover a pod that had crashed and restart a pod that had exhausted its memory allocation.
-If we clicked &quot;Exhaust CPU&quot; what you would see is tht the pod would keep running and kubernetes would cap its CPU utilization.</p><p>Note: we left the service deployed</p></div><div class="bespoke-marp-note" data-index="17" tabindex="0"><p>The only difference you should see is the front matter describing the resource type.
-A replica set is included in the manifests directory, but we will skip it as it is rarely used directly.</p></div><div class="bespoke-marp-note" data-index="19" tabindex="0"><p>Two strategies: Recreate (deletes and redeploys) and RollingUpdate (provides availability)
+If we clicked &quot;Exhaust CPU&quot; what you would see is tht the pod would keep running and kubernetes would cap its CPU utilization.</p><p>Note: we left the service deployed</p></div><div class="bespoke-marp-note" data-index="18" tabindex="0"><p>The only difference you should see is the front matter describing the resource type.
+A replica set is included in the manifests directory, but we will skip it as it is rarely used directly.</p></div><div class="bespoke-marp-note" data-index="20" tabindex="0"><p>Two strategies: Recreate (deletes and redeploys) and RollingUpdate (provides availability)
 Recreate is great for development when you want something to happen fast</p><p>* maxSurge and maxUnavailable can be fix num or percent
 * maxSurge starts a new pod, once its up, stops an old pod
 * maxUnavailable stops an old pod, once its stopped, it starts a new pod
 
 * Using a rollingupdate v1 and v2 of your app will be running at the same time, backwards compatible code/migrations are important!
 
-* Resque scheduler? Better to have two versions at once or no version running while rollout happens</p></div><div class="bespoke-marp-note" data-index="21" tabindex="0"><p>Does anyone know why this works?</p><p>Network routing and workloads are decoupled in kubernetes.
+* Resque scheduler? Better to have two versions at once or no version running while rollout happens</p></div><div class="bespoke-marp-note" data-index="22" tabindex="0"><p>Does anyone know why this works?</p><p>Network routing and workloads are decoupled in kubernetes.
 You attach them by using labels and label selectors, here this service will forward traffic to any pod with the 
-labels &quot;app: example-app&quot;, which our deployment also has defined.</p></div><div class="bespoke-marp-note" data-index="22" tabindex="0"><p>A deployment defines a static number of pods to run, but what if our traffic changes throughout the day?</p></div><div class="bespoke-marp-note" data-index="23" tabindex="0"><p>You should only see one pod 
+labels &quot;app: example-app&quot;, which our deployment also has defined.</p></div><div class="bespoke-marp-note" data-index="23" tabindex="0"><p>A deployment defines a static number of pods to run, but what if our traffic changes throughout the day?</p></div><div class="bespoke-marp-note" data-index="24" tabindex="0"><p>You should only see one pod 
 Go back to our web app and click &quot;exhaust CPU&quot;
 We should see more pods start to appear in our watch command
-If you click &quot;exhaust CPU&quot; a bunch, you'll see a bunch of pods start up</p></div><div class="bespoke-marp-note" data-index="25" tabindex="0"><p>Everything we have seen so far have been request-based workloads</p><p>This last command uses kubectl output and a selector to make a jsonpath query that outputs the name of the pod created by the job.</p></div><div class="bespoke-marp-note" data-index="27" tabindex="0"><p>* restartPolicy - Never, OnFailure - restart the pod or make a new one when failing
+If you click &quot;exhaust CPU&quot; a bunch, you'll see a bunch of pods start up</p></div><div class="bespoke-marp-note" data-index="26" tabindex="0"><p>Everything we have seen so far have been request-based workloads</p><p>This last command uses kubectl output and a selector to make a jsonpath query that outputs the name of the pod created by the job.</p></div><div class="bespoke-marp-note" data-index="28" tabindex="0"><p>* restartPolicy - Never, OnFailure - restart the pod or make a new one when failing
 * activeDeadlineSeconds - Timeout before the job should be stopped
 * backoffLimit - number of retries in event of failure
 * completions - how many times to run the job (could be process a mailing list, one email per run)

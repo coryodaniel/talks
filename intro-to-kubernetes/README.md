@@ -61,6 +61,14 @@ Server Version: version.Info{Major:"1", Minor:"19"...}
 ```
 
 ---
+
+![bg contain](./assets/yaml_af.png)
+
+<!--
+Are you ready for the greatest language ever?
+-->
+
+---
 ### `kubectl` Whirlwind Tour
 
 <!-- It's pronounced "kube cartel" -->
