@@ -503,3 +503,10 @@ A few of the more common resources:
 * StatefulSets
 * ConfigMaps
 * Secrets
+
+---
+### Thanks!
+
+* [Slides & Source](https://github.com/coryodaniel/talks/tree/master/intro-to-kubernetes)
+* [K8s Basics](https://kubernetes.io/docs/tutorials/kubernetes-basics/)
+* [Katacode Interactive K8s Tutorials](https://www.katacoda.com/courses/kubernetes)
