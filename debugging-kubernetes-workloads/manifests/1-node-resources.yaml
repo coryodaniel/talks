@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotty
+  labels:
+    app: spotty
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: spotty
+  template:
+    metadata:
+      labels:
+        app: spotty
+    spec:
+      containers:
+      - name: spotty
+        image: coryodaniel/spotty-server:latest
+        resources:
+          requests:
+            cpu: 500m
+            memory: 50G

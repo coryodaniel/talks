@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: default-quota
+spec:
+  hard:
+    requests.cpu: 500m
+    requests.memory: 500Mi
+    limits.cpu: 2000m
+    limits.memory: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotty
+  labels:
+    app: spotty
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: spotty
+  template:
+    metadata:
+      labels:
+        app: spotty
+    spec:
+      containers:
+      - name: spotty
+        image: coryodaniel/spotty-server:lol
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+          limits:
+            cpu: 1000m
+            memory: 100Mi
