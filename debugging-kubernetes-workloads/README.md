@@ -31,32 +31,17 @@ theme: gaia
   * `alias k=kubectl`
   * `alias kd="kubectl describe"`
   * `alias derp="kubectl get deployments,replicasets,pods"`
+  * `alias first-pod="kubectl get pods -o=jsonpath='{.items[0].metadata.name}'"`
 
 ---
 
-## Review Common Kubernetes Resources
+## Quick Review - Common k8s Resources
 
-TODO: Image, abstractions all the way down
-TODO: note fields for each scenario
-
-* deployment
-* replicaset
-* pod
-* service
-* endpoint
-
----
-
-## Why Workloads Fail 
-
-* Pods fail to get scheduled or becoming "ready"
-* Services fail to route traffic
-* Application errors
-
-<!--
-
-There are three major areas for workload failure in Kubernetes, being able to quickly identify _where_ a failure is happening can be difficult.
--->
+* deployments - create replicasets, handling rollouts
+* replicasets -create pods, ensure replica count
+* pods - does the work
+* services - creates endpoints (caveats), routes traffic
+* endpoints - ip/port details for workloads behind service
 
 ---
 
@@ -84,7 +69,7 @@ These are just a few tools I have installed / use.
 
 kubectl has a lot of tools to aid in debugging.
 
-Knowing the basics of kubectl can go a long way towards quickly resolving issues in a k8s cluster
+Knowing the basics can go a long way towards quickly resolving issues in a k8s cluster
 
 -->
 
@@ -99,22 +84,30 @@ Knowing the basics of kubectl can go a long way towards quickly resolving issues
 
 ---
 
+## Why Workloads Fail 
+
+* Pods fail to get scheduled or becoming "ready"
+* Services fail to route traffic
+* Application errors
+
+<!--
+
+Three major areas for workload failure in k8s
+
+Being able to quickly identify _where_ a failure is happening can be difficult.
+-->
+---
+
 ## Failing Pods
 
 ![bg](./assets/rusty-bucket.jpeg)
 
 <!-- 
 
-
-* k explain pod.status.containerStatuses.state
-* k explain pod.status.phase
-
 Links:
+
 * https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application-introspection/
 * https://kubernetes.io/docs/tasks/debug-application-cluster/debug-pod-replication-controller/
-
-
-Events are always a good place to check kubectl describe pod|service <name> or kubectl get events
 
 -->
 
@@ -126,16 +119,18 @@ Events are always a good place to check kubectl describe pod|service <name> or k
 
 Setup:
 
-`kubectl apply -f manifests/1-node-resources.yaml`
+`kubectl apply -f manifests/1-node-exhausted.yaml`
 
 Tools:
 
 * `kubectl get deployments,replicasets,pods`
-* `kubectl describe pods/POD_NAME_HERE`
+* `kubectl describe pods/$(first-pod)`
 
 <!--
 
-Using get with multiple resource types, we can see the deployment and replica set were
+NOTE: Im using the alias `first-pod` to insert the POD NAME.
+
+Using GET with multiple resource types, we can see the deployment and replica set were
 create, but the pod is PENDING.
 
 Lets look at the details of the pod.
@@ -148,6 +143,7 @@ NEXT
 
 ### `Pending` Pods :: Insufficient Node Resources
 
+`kubectl describe pods/$(first-pod)`:
 ```
 Containers:
   spotty:
@@ -174,6 +170,8 @@ Looking at the requests, we can see someone typed "50G" instead of "50Mi"
 
 Lets fix that memory request
 
+NEXT
+
 -->
 
 ---
@@ -194,7 +192,7 @@ Tools:
 
 If we run the same get command again, we'll see that we dont have ANY pods this time.
 
-When debugging Kubernetes resources remember the layers of abstraction is important.
+When debugging k8s resources remember the layers of abstraction is important.
 
 Here we dont have any pods... so the issue must be a layer up.
 
@@ -206,6 +204,7 @@ Lets describe the replica set.
 
 ### `NO` Pods!? :: Resource Quotas
 
+`kubectl describe replicasets/RS_NAME_HERE`:
 ```
 Limits:
   cpu:     1
@@ -220,14 +219,23 @@ Requests:
 
 <!-- 
 
-In this scenario we exceeding a CPU quota applied to our namespace. If you examine the YAML file you'll see
-that a resource quota was applied that said the maximum total request size for a containers CPU is 50m, but we requested 500m.
+We exceeding a CPU quota applied to our namespace. 
+
+Examining the YAML file you'll see a resource quota was applied.
+
+Maximum total CPU request size for all containers CPU is 50m, but we requested 500m.
+
+SHOW, DESCRIBE QUOTAS
+
+That quota is probably too low.
 
 Many other issues causing PENDING pods including:
 
 * Taints & affinities
 * PENDING PVCs
-* Scheduler or kubelet errors -->
+* Scheduler or kubelet errors 
+
+-->
 
 ---
 
@@ -240,8 +248,8 @@ Setup:
 Tools:
 
 * `kubectl get deployments,replicasets,pods`
-* `kubectl describe pods/POD_NAME`
-* `kubectl logs POD_NAME`
+* `kubectl describe pods/$(first-pod)`
+* `kubectl logs $(first-pod)`
 
 ```
 spotty-5bbb8dbf54-9mvfr   0/1     CrashLoopBackOff   4          2m35s
@@ -256,6 +264,16 @@ Lets describe the pods details.
 ---
 
 ### Scheduled, not `RUNNING` :: Application Error
+
+<!--
+Looking at the DESCRIBE output we can see a few things:
+
+* It was scheduled to a node
+* The container is terminated due to an exit code of one
+* There is a BackOff event happening because the container is failing repeatedly
+
+Lets see if we can get some container logs
+-->
 
 ```
 Node:         docker-desktop/192.168.65.4
@@ -279,26 +297,15 @@ Events:
   ...
   Warning  BackOff    2s (x3 over 18s)  kubelet            Back-off restarting failed container
 ```
-
-<!--
-Looking at the details output we can see a few things:
-
-* It was scheduled to a node
-* The container is terminated due to an exit code of one
-* There is a BackOff event happening because the container is failing repeatedly
-
-Lets see if we can get some container logs
--->
-
 ---
 
-## Scheduled, not `RUNNING` :: Getting Logs
+### Scheduled, not `RUNNING` :: Getting Logs
 
 Tools:
-* `kubectl logs POD_NAME`
-* `kubectl logs POD_NAME --previous`
-* `kubectl logs POD_NAME -c CONTAINER_NAME`
-* `kubectl logs POD_NAME --all-containers=true`
+* `kubectl logs $(first-pod)`
+* `kubectl logs $(first-pod) --previous`
+* `kubectl logs $(first-pod) -c CONTAINER_NAME`
+* `kubectl logs $(first-pod) --all-containers=true`
 
 ```
 Starting server on :8080
@@ -306,24 +313,26 @@ Something janky happened!
 ```
 
 <!--
-Sometime containers fail so fast they dont log any details, you can use the --previous flag to pull logs from a previous container that failed in the Crash back off loop.
+Sometime containers fail so fast they dont log any details.
 
-We can see that something janky happened. This is actually a flag to the binary that I added to cause the app to crash for demonstration purposes. Lets remove that flag.
+use the --previous flag to pull logs from a previous container that failed in the Crash back off loop.
 
-Links:
-* https://kubernetes.io/docs/tasks/debug-application-cluster/determine-reason-pod-failure/
+We can see that "something janky" happened. This is actually a flag to the binary that I added to cause the app to crash for demonstration purposes. Lets remove that flag.
 
 Other issues causing CrashLoopBackOff
 
 * Wrong docker command
 * Application errors
 * Bad livenessprobe
+
+Links:
+* https://kubernetes.io/docs/tasks/debug-application-cluster/determine-reason-pod-failure/
   
 -->
 
 ---
 
-## Images Fail to Pull
+### Images Fail to Pull
 
 Setup:
 
@@ -332,7 +341,7 @@ Setup:
 Tools:
 
 * `kubectl get deployments,replicasets,pods`
-* `kubectl describe pods/POD_NAME`
+* `kubectl describe pods/$(first-pod)`
 
 ---
 
@@ -348,8 +357,9 @@ In this case, if we look at the YAML we can see the docker image tag is "lol." T
 * Docker rate limiting :D
 -->
 
-## Images Fail to Pull :: Image Not Found
+### Images Fail to Pull :: Image Not Found
 
+`kubectl describe pods/$(first-pod)`:
 ```
 Containers:
   spotty:
@@ -370,7 +380,7 @@ Events:
 
 ---
 
-## Pods is `RUNNING`, but not `READY`
+### Pods is `RUNNING`, but not `READY`
 
 `RUNNING` the container's entrypoint/command started
 `READY` it can accept traffic
@@ -382,8 +392,8 @@ Setup:
 Tools:
 
 * `kubectl get deployments,replicasets,pods`
-* `kubectl describe pods/POD_NAME`
-* `kubectl logs POD_NAME`
+* `kubectl describe pods/$(first-pod)`
+* `kubectl logs $(first-pod)`
 
 <!--
 
@@ -391,6 +401,8 @@ RUNNING vs READY
 
 * A pod with no readiness probe is READY by default once RUNNING
 * If a readiness probe is defined, the pod will get into RUNNING, then once the probe passes it will be come READY for traffic
+
+SHOW, DESCRIBE READINESS PROBE
 
 -->
 
@@ -406,7 +418,7 @@ YMMV: If we look at the YAML we'll see a readiness probe configured. The URL pat
 
 -->
 
-## Pods is `RUNNING`, but not `READY` :: Logs
+### Pods is `RUNNING`, but not `READY` :: Logs
 
 `kubectl get pods`:
 ```
@@ -414,7 +426,7 @@ NAME                          READY   STATUS    RESTARTS   AGE
 pod/spotty-76c5c5874f-b4jtq   0/1     Running   0          6s
 ```
 
-`kubectl log POD_NAME`:
+`kubectl log $(first-pod)`:
 ```
 Starting server on :8080
 [GET] 500 /spotty
@@ -424,7 +436,7 @@ Starting server on :8080
 
 ---
 
-## Pods is `RUNNING`, but not `READY` :: Readiness
+### Pods is `RUNNING`, but not `READY` :: Readiness
 
 <!--
 
@@ -440,7 +452,7 @@ Kubernetes will not send traffic to this pod while its unhealthy!
 Lets fix that!
 -->
 
-`kubectl describe pods/POD_NAME`
+`kubectl describe pods/$(first-pod)`
 
 ```
 Containers:
@@ -465,15 +477,21 @@ Events:
 
 ---
 
-## Port forwarding a `READY` pod 
+### Port forwarding a `READY` pod 
 
 <!--
 
-In scenarios where traffic isn't routing correctly to the pod, port-forwarding directly to a pod can help rule out an issue with that pod.
+Traffic isn't routing correctly to the pod 
 
-After forwarding the port, you should be able to browse to localhost and see your app.
+Port-forwarding directly to a pod can help rule out an issue with that pod.
 
-If port forwarding fails you'll see "connection refused" or a similar message in your console. Generally if an app is READY but the port cannot be forwarded it means the app is listening on the wrong port or IP
+The left port number is a number on your machine, the right is the port of the pod.
+
+After forwarding, you should be able to browse to localhost and see your app.
+
+If port forwarding fails you'll see "connection refused" or a similar message in your console. 
+
+Generally if an app is READY but the port cannot be forwarded it means the app is listening on the wrong port or IP
 
 -->
 
@@ -483,8 +501,289 @@ Setup:
 
 Tools:
 
-* `kubectl port-forward pod/POD_NAME_HERE PORT_ON_YOUR_MACHINE:8080`
+* `kubectl port-forward pod/$(first-pod) 8080:8080`
   
 When port-forwarding fails:
 * the app is listening on a different port than you forwarded
 * the app is listening on an IP address besides `0.0.0.0`
+---
+
+## Failing Services
+
+![bg](./assets/bad-day.jpeg)
+
+---
+
+<!--
+
+Links:
+* https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/
+
+-->
+
+### Service Fails to Route
+
+Setup:
+
+`kubectl apply -f manifests/7-no-endpoints.yaml`
+
+Tools:
+
+* `kubectl get svc`
+* `kubectl describe svc/spotty`
+
+<!--
+
+Its important to remember kubernetes is abstrations all the way down
+
+A service is an abstraction over endpoints, applications bound to IP/ports
+
+Services find applications using label selectors
+
+Empowers you to do canaries, blue/green, and deployment rollovers - because one service can target MULTIPLE versions of a deployment
+-->
+---
+
+<!--
+
+Describe the service, 
+
+Can't find any endpoints to route traffic to
+
+Usually this indicates a problem with the pods or with _finding_ the pods
+
+SHOW AND DESCRIBE service
+
+-->
+
+### Service Fails to Route :: Wrong Label Selector
+
+`kubectl describe svc/spotty`
+```
+Name:                     spotty
+Namespace:                default
+Selector:                 app=spottie
+Type:                     NodePort
+IP:                       10.102.252.253
+Port:                     <unset>  8080/TCP
+TargetPort:               web/TCP
+NodePort:                 <unset>  32459/TCP
+Endpoints:                <none>
+```
+
+---
+
+### Service Fails to Route :: Wrong Label Selector
+
+<!--
+
+If we look at the YAML and see what labels the service is targeting, we can use those labels to pull up the pods.
+
+Using S P O T T I E, we get nothing. 
+
+GET all the pods and their labels.
+
+Service's label selector was spelled wrong.
+
+If the label selector had been correct, we would want to check our pod to make sure it was getting an IP address assigned.
+
+-->
+
+
+`kubectl get pods --selector=name=spottie`:
+```
+No resources found in default namespace.
+```
+
+`kubectl get pods -o jsonpath='{.items[*].metadata.labels}'`:
+
+```
+{"app":"spotty","pod-template-hash":"75f4475fff"}
+```
+
+---
+
+### Service Fails to Route
+
+
+Setup:
+
+`kubectl apply -f manifests/8-target-locked.yaml`
+
+Tools:
+
+* `kubectl describe svc/spotty`
+
+<!--
+
+Lets fix our bad label selector.
+
+Run describe, we can now see the endpoints.
+
+-->
+---
+
+### Service Fails to Route :: Bad Target
+
+<!--
+
+SIDE NOTE: 
+
+* Services are "internal" load balancers in kubernetes. Depending on the cloud provider and service type an external load balancer may be created.
+
+* With docker for desktop, that is not the case, we have to port-forward the service to access it, but always remember that you can port forward a service OR a pod. 
+
+* Its very helpful in diagnosing which component is experiencing the problem.
+
+
+FORWARD the service's port and access the app - but its doesnt load.
+
+In the command above the left port is the port on your machine, the right port is the port of the pod or the service.
+
+In the output the right side of the arrow is the targetPort of the workload. We can see it is trying to reach 8081.
+
+LOOK AT YAML manifest, we can see spotty runs on 8080, someone typed the wrong port number :(
+-->
+
+`kubectl port-forward svc/spotty 8080:8080`:
+
+```
+Forwarding from 127.0.0.1:8080 -> 8081
+Forwarding from [::1]:8080 -> 8081
+Handling connection for 8080
+Handling connection for 8080
+E0615 10:07:05.769871   51714 portforward.go:400] an error occurred forwarding 8080 -> 8081: 
+  error forwarding port 8081
+```
+
+---
+
+### Port Forwarding a Service
+
+Setup:
+
+`kubectl apply -f manifests/9-one-fine-svc.yaml`
+
+Tools:
+
+* `kubectl describe svc/spotty`
+* `kubectl port-forward svc/spotty 8080:8080`
+
+---
+
+### Port Forwarding a Service :: Whats in a Name?
+
+<!--
+SHOW YAML explain the TargetPort is called "web" instead of 8081.
+
+Kubernetes supports "naming" ports and referencing them by name, this has two advantages:
+
+* if the application developer changes their port, the service still works
+* if the service operator MISSPELLS the name, endpoints won't bind
+* This can be helpful in diagnosing issues, because a wrong port number WILL give you an endpoint, giving you a false positive that everything is configured correctly.
+-->
+
+`kubectl describe svc/spotty`:
+
+```
+Name:                     spotty
+Namespace:                default
+Selector:                 app=spotty
+Type:                     NodePort
+IP:                       10.102.252.253
+Port:                     <unset>  8080/TCP
+TargetPort:               web/TCP
+NodePort:                 <unset>  32459/TCP
+Endpoints:                10.1.1.125:8080
+External Traffic Policy:  Cluster
+```
+
+---
+
+<!--
+
+Links:
+* https://kubernetes.io/docs/tasks/debug-application-cluster/debug-running-pod/
+* https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/
+* https://kubernetes.io/docs/tasks/debug-application-cluster/local-debugging/
+  
+-->
+
+## Debugging Workloads
+
+Setup:
+
+`kubectl apply -f manifests/10-app.yaml`
+
+Tools:
+
+* `kubectl exec pod/$(first-pod) -it -- sh`
+* `kubectl debug`
+
+---
+
+## Debugging Workloads :: Exec into Container
+
+`kubectl exec pod/$(first-pod) -it -- sh`:
+
+```
+/ # ls
+bin            etc            proc           spotty-server  var
+boot           home           root           sys
+busybox        lib            run            tmp
+dev            lib64          sbin           usr
+
+/ # ps
+PID   USER     TIME  COMMAND
+    1 1000      0:00 /spotty-server
+   12 1000      0:00 sh
+   18 1000      0:00 ps
+```
+
+<!--
+
+kubectl exec puts you into the running pod/container. You can see from the `ps` output that spotty-server is running as non-root PID 1
+
+-->
+
+---
+
+## Debugging Workloads :: Kubectl Debug
+
+<!-- 
+
+In practice, you may not be able to shell into a container. Some containers purposefully dont have shells for security reasons.
+
+kubectl debug allows you to create copies of existing pods and all of their configuration, but change the base image.
+-->
+
+Create a copy of the pod with a new image:
+```
+kubectl debug $(first-pod) -it --copy-to=dbg-spotty \
+  --set-image=spotty=coryodaniel/spotty-server:latest-debug
+```
+
+```
+kubectl delete pod/dbg-spotty
+```
+
+---
+## Debugging Workloads :: Kubectl Debug
+
+<!--
+
+Other times you may need some debugging tools that aren't built into your container.
+
+kubectl debug can inject other containers into the pod copy.
+
+Unsupported in docker for desktop is the idea of ephemeral containers. This allows you to instead of copying the pod, to inject containers into the RUNNING pod. You can even inspect other pods' processes
+-->
+
+Copy the pod, set new image, add an additional busybox container for debugging
+```
+kubectl debug $(first-pod) -it --copy-to=dbg-spotty-bb --image=busybox \
+  --set-image=spotty=coryodaniel/spotty-server:latest-debug
+```
+
+---
+## Thanks!
